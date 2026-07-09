@@ -77,14 +77,20 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "LactoControl — Gestão de Lactação e Vacinação" },
+      {
+        name: "description",
+        content:
+          "Sistema para cadastro de vacas, controle da lactação, produção mensal de leite e calendário vacinal do rebanho.",
+      },
+      { property: "og:title", content: "LactoControl" },
+      {
+        property: "og:description",
+        content:
+          "Controle completo do ciclo de lactação e da vacinação do seu rebanho leiteiro.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:site", content: "@Lovable" },
     ],
     links: [
       {
