@@ -9,38 +9,164 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VacinasRouteImport } from './routes/vacinas'
+import { Route as VacinacaoRouteImport } from './routes/vacinacao'
+import { Route as VacasRouteImport } from './routes/vacas'
+import { Route as RelatoriosRouteImport } from './routes/relatorios'
+import { Route as ProducaoRouteImport } from './routes/producao'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as VacasIndexRouteImport } from './routes/vacas.index'
+import { Route as VacasIdRouteImport } from './routes/vacas.$id'
 
+const VacinasRoute = VacinasRouteImport.update({
+  id: '/vacinas',
+  path: '/vacinas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VacinacaoRoute = VacinacaoRouteImport.update({
+  id: '/vacinacao',
+  path: '/vacinacao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const VacasRoute = VacasRouteImport.update({
+  id: '/vacas',
+  path: '/vacas',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const RelatoriosRoute = RelatoriosRouteImport.update({
+  id: '/relatorios',
+  path: '/relatorios',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProducaoRoute = ProducaoRouteImport.update({
+  id: '/producao',
+  path: '/producao',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const VacasIndexRoute = VacasIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => VacasRoute,
+} as any)
+const VacasIdRoute = VacasIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => VacasRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/producao': typeof ProducaoRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/vacas': typeof VacasRouteWithChildren
+  '/vacinacao': typeof VacinacaoRoute
+  '/vacinas': typeof VacinasRoute
+  '/vacas/$id': typeof VacasIdRoute
+  '/vacas/': typeof VacasIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/producao': typeof ProducaoRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/vacinacao': typeof VacinacaoRoute
+  '/vacinas': typeof VacinasRoute
+  '/vacas/$id': typeof VacasIdRoute
+  '/vacas': typeof VacasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/producao': typeof ProducaoRoute
+  '/relatorios': typeof RelatoriosRoute
+  '/vacas': typeof VacasRouteWithChildren
+  '/vacinacao': typeof VacinacaoRoute
+  '/vacinas': typeof VacinasRoute
+  '/vacas/$id': typeof VacasIdRoute
+  '/vacas/': typeof VacasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/producao'
+    | '/relatorios'
+    | '/vacas'
+    | '/vacinacao'
+    | '/vacinas'
+    | '/vacas/$id'
+    | '/vacas/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/producao'
+    | '/relatorios'
+    | '/vacinacao'
+    | '/vacinas'
+    | '/vacas/$id'
+    | '/vacas'
+  id:
+    | '__root__'
+    | '/'
+    | '/producao'
+    | '/relatorios'
+    | '/vacas'
+    | '/vacinacao'
+    | '/vacinas'
+    | '/vacas/$id'
+    | '/vacas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  ProducaoRoute: typeof ProducaoRoute
+  RelatoriosRoute: typeof RelatoriosRoute
+  VacasRoute: typeof VacasRouteWithChildren
+  VacinacaoRoute: typeof VacinacaoRoute
+  VacinasRoute: typeof VacinasRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vacinas': {
+      id: '/vacinas'
+      path: '/vacinas'
+      fullPath: '/vacinas'
+      preLoaderRoute: typeof VacinasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vacinacao': {
+      id: '/vacinacao'
+      path: '/vacinacao'
+      fullPath: '/vacinacao'
+      preLoaderRoute: typeof VacinacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/vacas': {
+      id: '/vacas'
+      path: '/vacas'
+      fullPath: '/vacas'
+      preLoaderRoute: typeof VacasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/relatorios': {
+      id: '/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof RelatoriosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/producao': {
+      id: '/producao'
+      path: '/producao'
+      fullPath: '/producao'
+      preLoaderRoute: typeof ProducaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +174,42 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/vacas/': {
+      id: '/vacas/'
+      path: '/'
+      fullPath: '/vacas/'
+      preLoaderRoute: typeof VacasIndexRouteImport
+      parentRoute: typeof VacasRoute
+    }
+    '/vacas/$id': {
+      id: '/vacas/$id'
+      path: '/$id'
+      fullPath: '/vacas/$id'
+      preLoaderRoute: typeof VacasIdRouteImport
+      parentRoute: typeof VacasRoute
+    }
   }
 }
 
+interface VacasRouteChildren {
+  VacasIdRoute: typeof VacasIdRoute
+  VacasIndexRoute: typeof VacasIndexRoute
+}
+
+const VacasRouteChildren: VacasRouteChildren = {
+  VacasIdRoute: VacasIdRoute,
+  VacasIndexRoute: VacasIndexRoute,
+}
+
+const VacasRouteWithChildren = VacasRoute._addFileChildren(VacasRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  ProducaoRoute: ProducaoRoute,
+  RelatoriosRoute: RelatoriosRoute,
+  VacasRoute: VacasRouteWithChildren,
+  VacinacaoRoute: VacinacaoRoute,
+  VacinasRoute: VacinasRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
