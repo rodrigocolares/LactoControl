@@ -428,9 +428,9 @@ function StatCard({
 }
 
 function buildAlertas(
-  vacas: ReturnType<typeof useStore<any>> extends any ? any : never,
-  producoes: any,
-  aplicacoes: any,
+  vacas: import("@/lib/types").Vaca[],
+  producoes: import("@/lib/types").ProducaoMensal[],
+  aplicacoes: import("@/lib/types").AplicacaoVacina[],
 ) {
   const alertas: { titulo: string; descricao: string; tone: string }[] = [];
   const { ano, mes } = currentMonthYear();
