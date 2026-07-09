@@ -439,7 +439,7 @@ function buildAlertas(
     if (vaca.status !== "lactacao") continue;
     const ps = producoesDaVaca(producoes, vaca.id);
     const st = estatisticas(ps);
-    const semMes = !ps.find((p: any) => p.ano === ano && p.mes === mes);
+    const semMes = !ps.find((p) => p.ano === ano && p.mes === mes);
     if (semMes) {
       alertas.push({
         titulo: `${vaca.nome} sem registro este mês`,
@@ -477,7 +477,7 @@ function buildAlertas(
 
   for (const ap of aplicacoes) {
     const st = statusVacina(ap);
-    const vaca = vacas.find((v: any) => v.id === ap.vacaId);
+    const vaca = vacas.find((v) => v.id === ap.vacaId);
     if (!vaca) continue;
     if (st === "vencida") {
       alertas.push({
