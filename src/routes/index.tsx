@@ -33,6 +33,7 @@ import {
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { useMemo } from "react";
+import { getCategoryColor } from "@/lib/chart-colors";
 
 export const Route = createFileRoute("/")({
   head: () => ({
