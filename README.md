@@ -1,4 +1,4 @@
-# 🐄 LactoControl
+# 🐄 Lacto Control
 
 > Sistema inteligente para gerenciamento de rebanho leiteiro, controle do ciclo de lactação, acompanhamento sanitário e análise gerencial da produção de leite.
 
@@ -10,7 +10,7 @@
 
 # 📖 Sobre o projeto
 
-O **LactoControl** é uma plataforma desenvolvida para produtores rurais, fazendas leiteiras, cooperativas e médicos veterinários que desejam centralizar todas as informações do rebanho em um único sistema.
+O **Lacto Control** é uma plataforma desenvolvida para produtores rurais, fazendas leiteiras, cooperativas e médicos veterinários que desejam centralizar todas as informações do rebanho em um único sistema.
 
 Além do cadastro dos animais e do acompanhamento da lactação, o sistema oferece dashboards, relatórios gerenciais, gráficos interativos e controle completo do histórico vacinal de cada vaca.
 

@@ -78,13 +78,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "LactoControl — Gestão de Lactação e Vacinação" },
+      { title: "Lacto Control — Gestão de Lactação e Vacinação" },
       {
         name: "description",
         content:
           "Sistema para cadastro de vacas, controle da lactação, produção mensal de leite e calendário vacinal do rebanho.",
       },
-      { property: "og:title", content: "LactoControl" },
+      { property: "og:title", content: "Lacto Control" },
       {
         property: "og:description",
         content:
