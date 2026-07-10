@@ -44,7 +44,7 @@ import {
 } from "recharts";
 import { VacaFormDialog } from "./vacas.index";
 
-export const Route = createFileRoute("/vacas/$id")({
+export const Route = createFileRoute("/_authenticated/vacas/$id")({
   component: VacaDetail,
 });
 

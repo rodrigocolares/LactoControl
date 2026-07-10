@@ -35,7 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import { useMemo } from "react";
 import { getCategoryColor } from "@/lib/chart-colors";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Dashboard — Lacto Control" },

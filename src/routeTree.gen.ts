@@ -9,207 +9,208 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as VacinasRouteImport } from './routes/vacinas'
-import { Route as VacinacaoRouteImport } from './routes/vacinacao'
-import { Route as VacasRouteImport } from './routes/vacas'
-import { Route as RelatoriosRouteImport } from './routes/relatorios'
-import { Route as ProducaoRouteImport } from './routes/producao'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as VacasIndexRouteImport } from './routes/vacas.index'
-import { Route as VacasIdRouteImport } from './routes/vacas.$id'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
+import { Route as AuthenticatedVacinasRouteImport } from './routes/_authenticated.vacinas'
+import { Route as AuthenticatedVacinacaoRouteImport } from './routes/_authenticated.vacinacao'
+import { Route as AuthenticatedVacasRouteImport } from './routes/_authenticated.vacas'
+import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated.relatorios'
+import { Route as AuthenticatedProducaoRouteImport } from './routes/_authenticated.producao'
+import { Route as AuthenticatedVacasIndexRouteImport } from './routes/_authenticated.vacas.index'
+import { Route as AuthenticatedVacasIdRouteImport } from './routes/_authenticated.vacas.$id'
 
-const VacinasRoute = VacinasRouteImport.update({
-  id: '/vacinas',
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/_authenticated/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedVacinasRoute = AuthenticatedVacinasRouteImport.update({
+  id: '/_authenticated/vacinas',
   path: '/vacinas',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VacinacaoRoute = VacinacaoRouteImport.update({
-  id: '/vacinacao',
+const AuthenticatedVacinacaoRoute = AuthenticatedVacinacaoRouteImport.update({
+  id: '/_authenticated/vacinacao',
   path: '/vacinacao',
   getParentRoute: () => rootRouteImport,
 } as any)
-const VacasRoute = VacasRouteImport.update({
-  id: '/vacas',
+const AuthenticatedVacasRoute = AuthenticatedVacasRouteImport.update({
+  id: '/_authenticated/vacas',
   path: '/vacas',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RelatoriosRoute = RelatoriosRouteImport.update({
-  id: '/relatorios',
+const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
+  id: '/_authenticated/relatorios',
   path: '/relatorios',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProducaoRoute = ProducaoRouteImport.update({
-  id: '/producao',
+const AuthenticatedProducaoRoute = AuthenticatedProducaoRouteImport.update({
+  id: '/_authenticated/producao',
   path: '/producao',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
+const AuthenticatedVacasIndexRoute = AuthenticatedVacasIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedVacasRoute,
 } as any)
-const VacasIndexRoute = VacasIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => VacasRoute,
-} as any)
-const VacasIdRoute = VacasIdRouteImport.update({
+const AuthenticatedVacasIdRoute = AuthenticatedVacasIdRouteImport.update({
   id: '/$id',
   path: '/$id',
-  getParentRoute: () => VacasRoute,
+  getParentRoute: () => AuthenticatedVacasRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/producao': typeof ProducaoRoute
-  '/relatorios': typeof RelatoriosRoute
-  '/vacas': typeof VacasRouteWithChildren
-  '/vacinacao': typeof VacinacaoRoute
-  '/vacinas': typeof VacinasRoute
-  '/vacas/$id': typeof VacasIdRoute
-  '/vacas/': typeof VacasIndexRoute
+  '/producao': typeof AuthenticatedProducaoRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/vacas': typeof AuthenticatedVacasRouteWithChildren
+  '/vacinacao': typeof AuthenticatedVacinacaoRoute
+  '/vacinas': typeof AuthenticatedVacinasRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/vacas/$id': typeof AuthenticatedVacasIdRoute
+  '/vacas/': typeof AuthenticatedVacasIndexRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/producao': typeof ProducaoRoute
-  '/relatorios': typeof RelatoriosRoute
-  '/vacinacao': typeof VacinacaoRoute
-  '/vacinas': typeof VacinasRoute
-  '/vacas/$id': typeof VacasIdRoute
-  '/vacas': typeof VacasIndexRoute
+  '/producao': typeof AuthenticatedProducaoRoute
+  '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/vacinacao': typeof AuthenticatedVacinacaoRoute
+  '/vacinas': typeof AuthenticatedVacinasRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/vacas/$id': typeof AuthenticatedVacasIdRoute
+  '/vacas': typeof AuthenticatedVacasIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/producao': typeof ProducaoRoute
-  '/relatorios': typeof RelatoriosRoute
-  '/vacas': typeof VacasRouteWithChildren
-  '/vacinacao': typeof VacinacaoRoute
-  '/vacinas': typeof VacinasRoute
-  '/vacas/$id': typeof VacasIdRoute
-  '/vacas/': typeof VacasIndexRoute
+  '/_authenticated/producao': typeof AuthenticatedProducaoRoute
+  '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/_authenticated/vacas': typeof AuthenticatedVacasRouteWithChildren
+  '/_authenticated/vacinacao': typeof AuthenticatedVacinacaoRoute
+  '/_authenticated/vacinas': typeof AuthenticatedVacinasRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/vacas/$id': typeof AuthenticatedVacasIdRoute
+  '/_authenticated/vacas/': typeof AuthenticatedVacasIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
     | '/producao'
     | '/relatorios'
     | '/vacas'
     | '/vacinacao'
     | '/vacinas'
+    | '/'
     | '/vacas/$id'
     | '/vacas/'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
     | '/producao'
     | '/relatorios'
     | '/vacinacao'
     | '/vacinas'
+    | '/'
     | '/vacas/$id'
     | '/vacas'
   id:
     | '__root__'
-    | '/'
-    | '/producao'
-    | '/relatorios'
-    | '/vacas'
-    | '/vacinacao'
-    | '/vacinas'
-    | '/vacas/$id'
-    | '/vacas/'
+    | '/_authenticated/producao'
+    | '/_authenticated/relatorios'
+    | '/_authenticated/vacas'
+    | '/_authenticated/vacinacao'
+    | '/_authenticated/vacinas'
+    | '/_authenticated/'
+    | '/_authenticated/vacas/$id'
+    | '/_authenticated/vacas/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ProducaoRoute: typeof ProducaoRoute
-  RelatoriosRoute: typeof RelatoriosRoute
-  VacasRoute: typeof VacasRouteWithChildren
-  VacinacaoRoute: typeof VacinacaoRoute
-  VacinasRoute: typeof VacinasRoute
+  AuthenticatedProducaoRoute: typeof AuthenticatedProducaoRoute
+  AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
+  AuthenticatedVacasRoute: typeof AuthenticatedVacasRouteWithChildren
+  AuthenticatedVacinacaoRoute: typeof AuthenticatedVacinacaoRoute
+  AuthenticatedVacinasRoute: typeof AuthenticatedVacinasRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/vacinas': {
-      id: '/vacinas'
-      path: '/vacinas'
-      fullPath: '/vacinas'
-      preLoaderRoute: typeof VacinasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/vacinacao': {
-      id: '/vacinacao'
-      path: '/vacinacao'
-      fullPath: '/vacinacao'
-      preLoaderRoute: typeof VacinacaoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/vacas': {
-      id: '/vacas'
-      path: '/vacas'
-      fullPath: '/vacas'
-      preLoaderRoute: typeof VacasRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/relatorios': {
-      id: '/relatorios'
-      path: '/relatorios'
-      fullPath: '/relatorios'
-      preLoaderRoute: typeof RelatoriosRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/producao': {
-      id: '/producao'
-      path: '/producao'
-      fullPath: '/producao'
-      preLoaderRoute: typeof ProducaoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/vacas/': {
-      id: '/vacas/'
+    '/_authenticated/vacinas': {
+      id: '/_authenticated/vacinas'
+      path: '/vacinas'
+      fullPath: '/vacinas'
+      preLoaderRoute: typeof AuthenticatedVacinasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/vacinacao': {
+      id: '/_authenticated/vacinacao'
+      path: '/vacinacao'
+      fullPath: '/vacinacao'
+      preLoaderRoute: typeof AuthenticatedVacinacaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/vacas': {
+      id: '/_authenticated/vacas'
+      path: '/vacas'
+      fullPath: '/vacas'
+      preLoaderRoute: typeof AuthenticatedVacasRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/relatorios': {
+      id: '/_authenticated/relatorios'
+      path: '/relatorios'
+      fullPath: '/relatorios'
+      preLoaderRoute: typeof AuthenticatedRelatoriosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/producao': {
+      id: '/_authenticated/producao'
+      path: '/producao'
+      fullPath: '/producao'
+      preLoaderRoute: typeof AuthenticatedProducaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/vacas/': {
+      id: '/_authenticated/vacas/'
       path: '/'
       fullPath: '/vacas/'
-      preLoaderRoute: typeof VacasIndexRouteImport
-      parentRoute: typeof VacasRoute
+      preLoaderRoute: typeof AuthenticatedVacasIndexRouteImport
+      parentRoute: typeof AuthenticatedVacasRoute
     }
-    '/vacas/$id': {
-      id: '/vacas/$id'
+    '/_authenticated/vacas/$id': {
+      id: '/_authenticated/vacas/$id'
       path: '/$id'
       fullPath: '/vacas/$id'
-      preLoaderRoute: typeof VacasIdRouteImport
-      parentRoute: typeof VacasRoute
+      preLoaderRoute: typeof AuthenticatedVacasIdRouteImport
+      parentRoute: typeof AuthenticatedVacasRoute
     }
   }
 }
 
-interface VacasRouteChildren {
-  VacasIdRoute: typeof VacasIdRoute
-  VacasIndexRoute: typeof VacasIndexRoute
+interface AuthenticatedVacasRouteChildren {
+  AuthenticatedVacasIdRoute: typeof AuthenticatedVacasIdRoute
+  AuthenticatedVacasIndexRoute: typeof AuthenticatedVacasIndexRoute
 }
 
-const VacasRouteChildren: VacasRouteChildren = {
-  VacasIdRoute: VacasIdRoute,
-  VacasIndexRoute: VacasIndexRoute,
+const AuthenticatedVacasRouteChildren: AuthenticatedVacasRouteChildren = {
+  AuthenticatedVacasIdRoute: AuthenticatedVacasIdRoute,
+  AuthenticatedVacasIndexRoute: AuthenticatedVacasIndexRoute,
 }
 
-const VacasRouteWithChildren = VacasRoute._addFileChildren(VacasRouteChildren)
+const AuthenticatedVacasRouteWithChildren =
+  AuthenticatedVacasRoute._addFileChildren(AuthenticatedVacasRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ProducaoRoute: ProducaoRoute,
-  RelatoriosRoute: RelatoriosRoute,
-  VacasRoute: VacasRouteWithChildren,
-  VacinacaoRoute: VacinacaoRoute,
-  VacinasRoute: VacinasRoute,
+  AuthenticatedProducaoRoute: AuthenticatedProducaoRoute,
+  AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
+  AuthenticatedVacasRoute: AuthenticatedVacasRouteWithChildren,
+  AuthenticatedVacinacaoRoute: AuthenticatedVacinacaoRoute,
+  AuthenticatedVacinasRoute: AuthenticatedVacinasRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
