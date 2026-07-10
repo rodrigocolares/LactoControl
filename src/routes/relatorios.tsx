@@ -852,14 +852,10 @@ function RelatoriosPage() {
                       }
                       cursor="pointer"
                     >
-                      {porVaca.map((v, i) => (
+                      {porVaca.map((v) => (
                         <Cell
                           key={v.vacaId}
-                          fill={
-                            i === 0
-                              ? "hsl(var(--chart-1))"
-                              : "hsl(var(--primary))"
-                          }
+                          fill={getCategoryColor(`vaca-${v.vacaId}`)}
                         />
                       ))}
                     </Bar>
