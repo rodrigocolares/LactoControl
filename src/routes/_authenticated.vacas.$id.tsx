@@ -42,9 +42,9 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import { VacaFormDialog } from "./vacas.index";
+import { VacaFormDialog } from "./_authenticated.vacas.index";
 
-export const Route = createFileRoute("/vacas/$id")({
+export const Route = createFileRoute("/_authenticated/vacas/$id")({
   component: VacaDetail,
 });
 

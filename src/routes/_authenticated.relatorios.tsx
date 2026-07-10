@@ -62,7 +62,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { getCategoryColor } from "@/lib/chart-colors";
 
-export const Route = createFileRoute("/relatorios")({
+export const Route = createFileRoute("/_authenticated/relatorios")({
   head: () => ({
     meta: [
       { title: "Relatórios — Lacto Control" },

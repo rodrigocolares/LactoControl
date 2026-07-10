@@ -28,7 +28,7 @@ import {
 import { Plus, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/vacas/")({
+export const Route = createFileRoute("/_authenticated/vacas/")({
   head: () => ({
     meta: [
       { title: "Vacas — Lacto Control" },

@@ -1,5 +1,5 @@
 import { createFileRoute, Link, Outlet, useRouterState } from "@tanstack/react-router";
 
-export const Route = createFileRoute("/vacas")({
+export const Route = createFileRoute("/_authenticated/vacas")({
   component: () => <Outlet />,
 });

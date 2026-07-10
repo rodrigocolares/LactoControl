@@ -27,7 +27,7 @@ import {
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/vacinas")({
+export const Route = createFileRoute("/_authenticated/vacinas")({
   head: () => ({
     meta: [
       { title: "Vacinas — Lacto Control" },

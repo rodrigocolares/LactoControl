@@ -33,7 +33,7 @@ import {
 import { Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 
-export const Route = createFileRoute("/vacinacao")({
+export const Route = createFileRoute("/_authenticated/vacinacao")({
   head: () => ({
     meta: [
       { title: "Vacinação — Lacto Control" },

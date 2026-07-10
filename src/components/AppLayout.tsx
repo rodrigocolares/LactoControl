@@ -1,4 +1,4 @@
-import { Link, useRouterState } from "@tanstack/react-router";
+import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   Beef,
@@ -7,10 +7,22 @@ import {
   FileBarChart,
   Menu,
   X,
+  UserCircle,
+  LogOut,
+  Settings,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/hooks/use-auth";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
@@ -47,7 +59,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
         {/* Sidebar */}
         <aside
           className={cn(
-            "fixed inset-y-0 left-0 z-30 w-64 shrink-0 border-r border-sidebar-border bg-sidebar transition-transform md:sticky md:top-0 md:h-screen md:translate-x-0",
+            "fixed inset-y-0 left-0 z-30 flex w-64 shrink-0 flex-col border-r border-sidebar-border bg-sidebar transition-transform md:sticky md:top-0 md:h-screen md:translate-x-0",
             open ? "translate-x-0" : "-translate-x-full",
           )}
         >
@@ -87,6 +99,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
               );
             })}
           </nav>
+          <div className="mt-auto border-t border-sidebar-border p-3">
+            <UserMenu onNavigate={() => setOpen(false)} />
+          </div>
         </aside>
 
         {open && (
@@ -111,6 +126,65 @@ function Logo() {
     </div>
   );
 }
+
+function UserMenu({ onNavigate }: { onNavigate: () => void }) {
+  const { user, signOut } = useAuth();
+  const navigate = useNavigate();
+  const initials = (user?.user_metadata?.full_name || user?.email || "?")
+    .split(" ")
+    .map((p: string) => p[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+
+  const handleSignOut = async () => {
+    await signOut();
+    navigate({ to: "/auth", replace: true });
+  };
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-left transition-colors hover:bg-sidebar-accent">
+          <div className="grid size-9 shrink-0 place-items-center rounded-full bg-primary/15 text-sm font-semibold text-primary">
+            {initials}
+          </div>
+          <div className="min-w-0 flex-1">
+            <div className="truncate text-sm font-medium text-sidebar-foreground">
+              {user?.user_metadata?.full_name || "Usuário"}
+            </div>
+            <div className="truncate text-xs text-muted-foreground">{user?.email}</div>
+          </div>
+        </button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuLabel>Minha conta</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem
+          onClick={() => {
+            onNavigate();
+            navigate({ to: "/minha-conta" });
+          }}
+        >
+          <UserCircle className="mr-2 size-4" /> Perfil
+        </DropdownMenuItem>
+        <DropdownMenuItem
+          onClick={() => {
+            onNavigate();
+            navigate({ to: "/minha-conta" });
+          }}
+        >
+          <Settings className="mr-2 size-4" /> Alterar senha
+        </DropdownMenuItem>
+        <DropdownMenuSeparator />
+        <DropdownMenuItem onClick={handleSignOut} className="text-destructive focus:text-destructive">
+          <LogOut className="mr-2 size-4" /> Sair
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 
 export function PageHeader({
   title,
