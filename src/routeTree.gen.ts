@@ -9,44 +9,67 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.index'
 import { Route as AuthenticatedVacinasRouteImport } from './routes/_authenticated.vacinas'
 import { Route as AuthenticatedVacinacaoRouteImport } from './routes/_authenticated.vacinacao'
 import { Route as AuthenticatedVacasRouteImport } from './routes/_authenticated.vacas'
 import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated.relatorios'
 import { Route as AuthenticatedProducaoRouteImport } from './routes/_authenticated.producao'
+import { Route as AuthenticatedMinhaContaRouteImport } from './routes/_authenticated.minha-conta'
 import { Route as AuthenticatedVacasIndexRouteImport } from './routes/_authenticated.vacas.index'
 import { Route as AuthenticatedVacasIdRouteImport } from './routes/_authenticated.vacas.$id'
 
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/_authenticated/',
-  path: '/',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRoute = AuthenticatedRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedVacinasRoute = AuthenticatedVacinasRouteImport.update({
-  id: '/_authenticated/vacinas',
+  id: '/vacinas',
   path: '/vacinas',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedVacinacaoRoute = AuthenticatedVacinacaoRouteImport.update({
-  id: '/_authenticated/vacinacao',
+  id: '/vacinacao',
   path: '/vacinacao',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedVacasRoute = AuthenticatedVacasRouteImport.update({
-  id: '/_authenticated/vacas',
+  id: '/vacas',
   path: '/vacas',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
-  id: '/_authenticated/relatorios',
+  id: '/relatorios',
   path: '/relatorios',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedProducaoRoute = AuthenticatedProducaoRouteImport.update({
-  id: '/_authenticated/producao',
+  id: '/producao',
   path: '/producao',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedMinhaContaRoute = AuthenticatedMinhaContaRouteImport.update({
+  id: '/minha-conta',
+  path: '/minha-conta',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedVacasIndexRoute = AuthenticatedVacasIndexRouteImport.update({
   id: '/',
@@ -60,16 +83,22 @@ const AuthenticatedVacasIdRoute = AuthenticatedVacasIdRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof AuthenticatedIndexRoute
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/producao': typeof AuthenticatedProducaoRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/vacas': typeof AuthenticatedVacasRouteWithChildren
   '/vacinacao': typeof AuthenticatedVacinacaoRoute
   '/vacinas': typeof AuthenticatedVacinasRoute
-  '/': typeof AuthenticatedIndexRoute
   '/vacas/$id': typeof AuthenticatedVacasIdRoute
   '/vacas/': typeof AuthenticatedVacasIndexRoute
 }
 export interface FileRoutesByTo {
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/producao': typeof AuthenticatedProducaoRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
   '/vacinacao': typeof AuthenticatedVacinacaoRoute
@@ -80,6 +109,10 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/reset-password': typeof ResetPasswordRoute
+  '/_authenticated/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/_authenticated/producao': typeof AuthenticatedProducaoRoute
   '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
   '/_authenticated/vacas': typeof AuthenticatedVacasRouteWithChildren
@@ -92,16 +125,22 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
+    | '/auth'
+    | '/reset-password'
+    | '/minha-conta'
     | '/producao'
     | '/relatorios'
     | '/vacas'
     | '/vacinacao'
     | '/vacinas'
-    | '/'
     | '/vacas/$id'
     | '/vacas/'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/auth'
+    | '/reset-password'
+    | '/minha-conta'
     | '/producao'
     | '/relatorios'
     | '/vacinacao'
@@ -111,6 +150,10 @@ export interface FileRouteTypes {
     | '/vacas'
   id:
     | '__root__'
+    | '/_authenticated'
+    | '/auth'
+    | '/reset-password'
+    | '/_authenticated/minha-conta'
     | '/_authenticated/producao'
     | '/_authenticated/relatorios'
     | '/_authenticated/vacas'
@@ -122,57 +165,82 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  AuthenticatedProducaoRoute: typeof AuthenticatedProducaoRoute
-  AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
-  AuthenticatedVacasRoute: typeof AuthenticatedVacasRouteWithChildren
-  AuthenticatedVacinacaoRoute: typeof AuthenticatedVacinacaoRoute
-  AuthenticatedVacinasRoute: typeof AuthenticatedVacinasRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedRoute: typeof AuthenticatedRouteWithChildren
+  AuthRoute: typeof AuthRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/vacinas': {
       id: '/_authenticated/vacinas'
       path: '/vacinas'
       fullPath: '/vacinas'
       preLoaderRoute: typeof AuthenticatedVacinasRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/vacinacao': {
       id: '/_authenticated/vacinacao'
       path: '/vacinacao'
       fullPath: '/vacinacao'
       preLoaderRoute: typeof AuthenticatedVacinacaoRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/vacas': {
       id: '/_authenticated/vacas'
       path: '/vacas'
       fullPath: '/vacas'
       preLoaderRoute: typeof AuthenticatedVacasRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/relatorios': {
       id: '/_authenticated/relatorios'
       path: '/relatorios'
       fullPath: '/relatorios'
       preLoaderRoute: typeof AuthenticatedRelatoriosRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/producao': {
       id: '/_authenticated/producao'
       path: '/producao'
       fullPath: '/producao'
       preLoaderRoute: typeof AuthenticatedProducaoRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/minha-conta': {
+      id: '/_authenticated/minha-conta'
+      path: '/minha-conta'
+      fullPath: '/minha-conta'
+      preLoaderRoute: typeof AuthenticatedMinhaContaRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/vacas/': {
       id: '/_authenticated/vacas/'
@@ -204,13 +272,34 @@ const AuthenticatedVacasRouteChildren: AuthenticatedVacasRouteChildren = {
 const AuthenticatedVacasRouteWithChildren =
   AuthenticatedVacasRoute._addFileChildren(AuthenticatedVacasRouteChildren)
 
-const rootRouteChildren: RootRouteChildren = {
+interface AuthenticatedRouteChildren {
+  AuthenticatedMinhaContaRoute: typeof AuthenticatedMinhaContaRoute
+  AuthenticatedProducaoRoute: typeof AuthenticatedProducaoRoute
+  AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
+  AuthenticatedVacasRoute: typeof AuthenticatedVacasRouteWithChildren
+  AuthenticatedVacinacaoRoute: typeof AuthenticatedVacinacaoRoute
+  AuthenticatedVacinasRoute: typeof AuthenticatedVacinasRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+}
+
+const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedMinhaContaRoute: AuthenticatedMinhaContaRoute,
   AuthenticatedProducaoRoute: AuthenticatedProducaoRoute,
   AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
   AuthenticatedVacasRoute: AuthenticatedVacasRouteWithChildren,
   AuthenticatedVacinacaoRoute: AuthenticatedVacinacaoRoute,
   AuthenticatedVacinasRoute: AuthenticatedVacinasRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+}
+
+const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(
+  AuthenticatedRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRoute: AuthenticatedRouteWithChildren,
+  AuthRoute: AuthRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
