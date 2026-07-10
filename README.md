@@ -1,305 +1,385 @@
-🐄 LactoControl
+# 🐄 LactoControl
 
-Sistema inteligente para gerenciamento de rebanho leiteiro, controle do ciclo de lactação e acompanhamento sanitário.
+> Sistema inteligente para gerenciamento de rebanho leiteiro, controle do ciclo de lactação, acompanhamento sanitário e análise gerencial da produção de leite.
 
-📖 Sobre o projeto
+![Status](https://img.shields.io/badge/status-em%20desenvolvimento-blue)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Platform](https://img.shields.io/badge/platform-Web-orange)
 
-O LactoControl é uma aplicação desenvolvida para auxiliar produtores rurais, fazendas leiteiras e médicos veterinários no gerenciamento completo do rebanho.
+---
 
-O sistema permite acompanhar todo o ciclo produtivo de cada animal, desde o início da lactação até o controle vacinal, oferecendo indicadores, gráficos e relatórios que facilitam a tomada de decisão.
+# 📖 Sobre o projeto
 
-⸻
+O **LactoControl** é uma plataforma desenvolvida para produtores rurais, fazendas leiteiras, cooperativas e médicos veterinários que desejam centralizar todas as informações do rebanho em um único sistema.
 
-🎯 Objetivos
+Além do cadastro dos animais e do acompanhamento da lactação, o sistema oferece dashboards, relatórios gerenciais, gráficos interativos e controle completo do histórico vacinal de cada vaca.
 
-* Centralizar todas as informações do rebanho.
-* Acompanhar a produção de leite por animal.
-* Identificar o pico de lactação.
-* Monitorar o histórico sanitário.
-* Automatizar alertas importantes.
-* Gerar indicadores e relatórios gerenciais.
+O projeto foi concebido para crescer de forma modular, permitindo futuras integrações com Inteligência Artificial, IoT, sensores de ordenha e sistemas ERP do agronegócio.
 
-⸻
+---
 
-🚀 Funcionalidades
+# 🎯 Objetivos
 
-🐄 Cadastro de Vacas
+* Centralizar as informações do rebanho.
+* Controlar todo o ciclo de lactação.
+* Monitorar a produção mensal e diária.
+* Identificar automaticamente o pico de produção.
+* Gerenciar o histórico sanitário dos animais.
+* Gerar indicadores para tomada de decisão.
+* Automatizar alertas e notificações.
+* Facilitar a gestão da propriedade leiteira.
 
-Cada animal possui um cadastro individual contendo:
+---
+
+# 🚀 Funcionalidades
+
+## 🐄 Cadastro de Vacas
+
+Cadastro individual contendo:
 
 * Nome
-* Número/Brinco
+* Número do brinco
 * Raça
 * Data de nascimento
 * Data do último parto
 * Data de início da lactação
-* Status
-    * Em lactação
-    * Seca
-    * Prenha
-    * Descartada
+* Status (Em lactação, Seca, Prenha ou Descartada)
 * Observações
 
-⸻
+---
 
-🥛 Controle de Lactação
+## 🥛 Controle do Ciclo de Lactação
 
-Permite registrar mensalmente a produção de leite.
+Registro mensal contendo:
 
-Informações registradas
-
-* Mês
-* Ano
-* Produção total (litros)
+* Produção total de leite
 * Média diária
 * Observações
-
-Indicadores automáticos
-
+* Tempo de lactação
 * Produção acumulada
-* Média geral
+
+Indicadores automáticos:
+
+* Pico de lactação
 * Melhor mês
 * Menor mês
-* Pico de lactação
-* Tempo atual de lactação
+* Média geral
+* Total produzido
+* Evolução mensal
 
-⸻
+---
 
-📊 Dashboard
+# 💉 Controle Vacinal
 
-Painel inicial contendo:
+Cada animal possui um histórico sanitário completo.
 
-* Total de vacas
-* Vacas em lactação
-* Vacas secas
-* Produção total do mês
-* Média diária
-* Ranking de produção
-* Melhor produtora
-* Mês de maior produção
-
-⸻
-
-📈 Gráficos
-
-O sistema apresenta:
-
-* Evolução mensal da produção
-* Comparação entre vacas
-* Pico de lactação
-* Produção acumulada
-* Histórico anual
-
-⸻
-
-💉 Controle Vacinal
-
-Cada vaca possui um histórico completo de vacinação.
-
-Cadastro de Vacinas
-
-Campos:
+### Cadastro de Vacinas
 
 * Nome da vacina
 * Doença
 * Fabricante
-* Número de doses
 * Periodicidade
-* Intervalo entre doses
+* Número de doses
+* Intervalo entre aplicações
 * Tempo de carência
 * Observações
 
-⸻
+### Aplicação
 
-Aplicação de Vacinas
-
-Cada aplicação registra:
-
-* Animal
-* Vacina
 * Data
 * Dose
 * Responsável
 * Lote
-* Próxima aplicação
-* Observações
+* Próxima aplicação calculada automaticamente
 
-⸻
+### Histórico
 
-Histórico Vacinal
-
-A ficha da vaca apresenta:
-
-* Todas as vacinas
-* Linha do tempo
-* Vacinas pendentes
-* Vacinas vencidas
 * Vacinas em dia
-* Próximas aplicações
-
-⸻
-
-Dashboard Vacinal
-
-Indicadores:
-
-* Vacinas aplicadas no mês
 * Vacinas vencidas
-* Vacinas próximas do vencimento
-* Animais pendentes
-* Cobertura vacinal do rebanho
+* Vacinas pendentes
+* Linha do tempo vacinal
+* Alertas automáticos
 
-⸻
+---
 
-Alertas Automáticos
+# 📊 Dashboard Gerencial
 
-O sistema gera alertas para:
+O painel principal apresenta indicadores em tempo real:
 
-* Vacina vencida
-* Vacina vencendo em 30 dias
-* Vacina vencendo em 15 dias
-* Vacina vencendo em 7 dias
-* Vacinação do dia
-* Animais sem vacinação
+* Total de vacas cadastradas
+* Vacas em lactação
+* Vacas secas
+* Vacas prenhas
+* Produção total do mês
+* Média diária geral
+* Produção acumulada
+* Ranking de produção
+* Animal mais produtivo
+* Mês de maior produção
 
-⸻
+---
 
-📄 Relatórios
+# 📈 Relatórios Inteligentes
 
-Relatórios disponíveis:
+A nova área de relatórios permite análises detalhadas da produção utilizando gráficos interativos.
+
+## Filtros
+
+* Período
+* Mês
+* Ano
+* Animal
+* Raça
+* Status
+* Lactação
+
+Os filtros atualizam todos os indicadores e gráficos automaticamente.
+
+---
+
+## Indicadores
+
+O relatório apresenta:
+
+* Produção total do período
+* Produção do mês
+* Média diária do rebanho
+* Média diária por vaca
+* Melhor produtora
+* Melhor mês
+* Quantidade de animais considerados
+* Ranking de produtividade
+
+---
+
+## Gráficos
+
+### 📊 Produção Total por Mês
+
+Gráfico de linha ou barras exibindo a evolução mensal da produção do rebanho.
+
+Inclui:
 
 * Produção mensal
-* Produção anual
-* Produção por animal
-* Ranking de produtividade
-* Histórico vacinal
-* Vacinas pendentes
-* Vacinas vencidas
+* Destaque para o maior mês
+* Destaque para o menor mês
 
-Exportação:
+---
+
+### 🐄 Produção por Vaca
+
+Gráfico de barras comparando todos os animais.
+
+Exibe:
+
+* Produção total
+* Ranking automático
+* Tooltip com informações detalhadas
+* Acesso rápido à ficha do animal
+
+---
+
+### 📅 Média Diária por Vaca
+
+Gráfico específico para comparação da produtividade diária.
+
+Inclui:
+
+* Média diária
+* Linha de referência da média geral
+* Identificação dos animais acima ou abaixo da média
+
+---
+
+### 📈 Evolução da Média Diária
+
+Gráfico de linha mostrando a evolução da produtividade diária do rebanho ao longo do tempo.
+
+---
+
+### 📊 Produção Total × Média Diária
+
+Gráfico combinado contendo:
+
+* Barras para produção mensal
+* Linha para média diária
+
+Facilita a identificação da relação entre produtividade e volume produzido.
+
+---
+
+# 🎨 Visualização dos Gráficos
+
+Todos os gráficos possuem identidade visual moderna.
+
+### Melhorias implementadas
+
+* Barras coloridas individualmente
+* Cada categoria possui uma cor exclusiva
+* Paleta consistente em toda aplicação
+* Legendas automáticas
+* Tooltips informativos
+* Destaque visual ao passar o mouse
+* Compatibilidade com modo claro e escuro
+* Responsividade completa
+
+A mesma vaca, mês ou categoria mantém sempre a mesma cor em qualquer gráfico do sistema.
+
+---
+
+# 📋 Relatórios Exportáveis
+
+Os relatórios podem ser exportados em:
 
 * PDF
 * Excel
 * CSV
 
-⸻
+As exportações incluem:
 
-📱 Interface
+* Filtros utilizados
+* Indicadores
+* Gráficos
+* Tabelas detalhadas
+* Data e hora da geração
+
+---
+
+# 📱 Interface
+
+A aplicação foi projetada para funcionar em:
+
+* Desktop
+* Notebook
+* Tablet
+* Smartphone
 
 Características:
 
 * Layout responsivo
-* Mobile First
-* Tablet
-* Desktop
-* Cards modernos
-* Dashboard intuitivo
+* Dashboard moderno
 * Gráficos interativos
 * Filtros rápidos
+* Navegação intuitiva
+* Componentes reutilizáveis
 
-⸻
+---
 
-⚙️ Regras de Negócio
+# ⚙️ Regras de Negócio
 
-Lactação
+## Lactação
 
 * Não permitir produção negativa.
 * Calcular automaticamente a média diária.
-* Identificar automaticamente o pico de produção.
-* Calcular o total do ciclo.
+* Identificar automaticamente o pico de lactação.
+* Atualizar indicadores em tempo real.
 
-Vacinação
+## Vacinação
 
 * Calcular automaticamente a próxima dose.
-* Não permitir registros duplicados.
+* Evitar registros duplicados.
 * Manter histórico permanente.
-* Classificar automaticamente:
-    * Em dia
-    * Próxima do vencimento
-    * Vencida
+* Classificar automaticamente o status vacinal.
 
-⸻
+## Relatórios
 
-📌 Estrutura sugerida
+* Atualização automática após qualquer alteração.
+* Utilização apenas de dados válidos.
+* Arredondamento das médias para duas casas decimais.
+* Tratamento para ausência de dados.
+* Compatibilidade com anos bissextos.
 
-Dashboard
-│
-├── Cadastro de Vacas
-├── Produção Mensal
-├── Lactação
-├── Vacinação
-├── Relatórios
-├── Configurações
-└── Perfil da Vaca
+---
 
-⸻
-
-🔮 Evoluções Futuras
-
-* Controle reprodutivo
-* Inseminação artificial
-* Diagnóstico de gestação
-* Controle de partos
-* Árvore genealógica
-* Controle financeiro
-* Custos por animal
-* Controle de medicamentos
-* Mastite
-* Vermifugação
-* Integração com sensores IoT
-* Aplicativo móvel
-* Notificações por WhatsApp
-* API para integração com ERPs agro
-* Inteligência Artificial para previsão do pico de lactação
-* IA para prever queda de produção
-* IA para identificar animais com risco sanitário
-
-⸻
-
-🛠️ Tecnologias sugeridas
+# 🛠️ Tecnologias
 
 * Lovable
 * React
 * TypeScript
 * Tailwind CSS
 * shadcn/ui
+* Recharts
 * Supabase
 * PostgreSQL
-* Recharts
 * React Hook Form
 * Zod
 
-⸻
+---
 
-🎯 Público-alvo
+# 🔮 Roadmap
 
-* Produtores de leite
+## Próximas funcionalidades
+
+### Reprodução
+
+* Controle de cio
+* Inseminação artificial
+* Cobertura
+* Diagnóstico de gestação
+* Controle de partos
+
+### Sanidade
+
+* Vermifugação
+* Tratamentos
+* Mastite
+* Medicamentos
+* Exames laboratoriais
+
+### Financeiro
+
+* Custos por animal
+* Receita por produção
+* Rentabilidade
+* Fluxo de caixa
+
+### Inteligência Artificial
+
+* Previsão do pico de lactação
+* Identificação precoce de queda de produção
+* Recomendações de manejo
+* Alertas inteligentes
+* Predição de produtividade
+
+### IoT
+
+* Integração com sensores
+* Ordenhadeiras automáticas
+* Medidores de leite
+* Monitoramento em tempo real
+
+---
+
+# 👨‍🌾 Público-alvo
+
+* Produtores rurais
 * Fazendas leiteiras
 * Cooperativas
-* Veterinários
+* Médicos veterinários
 * Zootecnistas
 * Consultores agropecuários
 
-⸻
+---
 
-🌟 Diferenciais
+# 🌟 Diferenciais
 
-* Gestão completa da lactação.
-* Controle sanitário integrado.
-* Dashboard com indicadores em tempo real.
-* Alertas automáticos.
-* Relatórios gerenciais.
-* Interface simples e responsiva.
-* Estrutura preparada para expansão com Inteligência Artificial e Internet das Coisas (IoT).
+* Gestão completa do rebanho.
+* Controle integrado de lactação e vacinação.
+* Dashboards com indicadores em tempo real.
+* Relatórios avançados com gráficos interativos.
+* Visualização moderna e intuitiva.
+* Exportação de relatórios em múltiplos formatos.
+* Arquitetura preparada para expansão.
+* Base preparada para Inteligência Artificial e Internet das Coisas (IoT).
 
-⸻
+---
 
-📄 Licença
+# 📄 Licença
 
-Este projeto está licenciado sob a licença MIT.
+Este projeto está licenciado sob a licença **MIT**.
 
-⸻
+---
 
-👨‍💻 Autor
+# 👨‍💻 Autor
 
-Desenvolvido por Rodrigo Otavio Leão Colares com apoio do Lovable e ChatGPT para acelerar o desenvolvimento de soluções voltadas ao agronegócio e à pecuária leiteira.
+Desenvolvido por **Rodrigo Otavio Leão Colares**, utilizando **Lovable** para desenvolvimento full stack acelerado e **ChatGPT** como apoio na arquitetura, documentação e definição de funcionalidades, com foco na transformação digital da pecuária leiteira.
