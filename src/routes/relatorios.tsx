@@ -904,10 +904,9 @@ function RelatoriosPage() {
                       {porVaca.map((v) => (
                         <Cell
                           key={v.vacaId}
-                          fill={
-                            v.mediaDiaria >= mediaDiariaRebanho
-                              ? "hsl(var(--success))"
-                              : "hsl(var(--destructive))"
+                          fill={getCategoryColor(`vaca-${v.vacaId}`)}
+                          fillOpacity={
+                            v.mediaDiaria >= mediaDiariaRebanho ? 1 : 0.55
                           }
                         />
                       ))}
@@ -918,13 +917,12 @@ function RelatoriosPage() {
             </div>
             <LegendRow>
               <LegendDot
-                color="hsl(var(--success))"
-                label="Acima da média"
+                color="hsl(var(--chart-2))"
+                label="Linha da média do rebanho"
               />
-              <LegendDot
-                color="hsl(var(--destructive))"
-                label="Abaixo da média"
-              />
+              <span>
+                Barras mais opacas indicam vacas abaixo da média.
+              </span>
             </LegendRow>
           </ChartCard>
 
