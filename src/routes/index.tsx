@@ -33,6 +33,7 @@ import {
 } from "recharts";
 import { Badge } from "@/components/ui/badge";
 import { useMemo } from "react";
+import { getCategoryColor } from "@/lib/chart-colors";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -310,12 +311,10 @@ function Dashboard() {
                     }}
                   />
                   <Bar dataKey="litros" radius={[6, 6, 0, 0]}>
-                    {barData.map((_, i) => (
+                    {barData.map((d: any, i) => (
                       <Cell
                         key={i}
-                        fill={
-                          i === 0 ? "var(--primary)" : "var(--chart-2)"
-                        }
+                        fill={getCategoryColor(`vaca-${d.vacaId ?? d.nome ?? i}`)}
                       />
                     ))}
                   </Bar>
