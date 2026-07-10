@@ -99,6 +99,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
               );
             })}
           </nav>
+          <div className="mt-auto border-t border-sidebar-border p-3">
+            <UserMenu onNavigate={() => setOpen(false)} />
+          </div>
         </aside>
 
         {open && (
