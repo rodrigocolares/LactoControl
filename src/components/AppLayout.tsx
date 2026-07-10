@@ -31,7 +31,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
       <header className="sticky top-0 z-40 flex items-center justify-between border-b border-border bg-sidebar/95 px-4 py-3 backdrop-blur md:hidden">
         <Link to="/" className="flex items-center gap-2">
           <Logo />
-          <span className="font-bold tracking-tight">LactoControl</span>
+          <span className="font-bold tracking-tight">Lacto Control</span>
         </Link>
         <Button
           variant="ghost"
@@ -55,7 +55,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
             <Logo />
             <div>
               <div className="text-base font-bold leading-tight tracking-tight text-sidebar-foreground">
-                LactoControl
+                Lacto Control
               </div>
               <div className="text-xs text-muted-foreground">
                 Gestão leiteira

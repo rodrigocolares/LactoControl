@@ -38,7 +38,7 @@ import { getCategoryColor } from "@/lib/chart-colors";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Dashboard — LactoControl" },
+      { title: "Dashboard — Lacto Control" },
       {
         name: "description",
         content: "Panorama do rebanho, produção do mês e alertas sanitários.",

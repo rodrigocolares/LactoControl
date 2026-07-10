@@ -65,7 +65,7 @@ import { getCategoryColor } from "@/lib/chart-colors";
 export const Route = createFileRoute("/relatorios")({
   head: () => ({
     meta: [
-      { title: "Relatórios — LactoControl" },
+      { title: "Relatórios — Lacto Control" },
       {
         name: "description",
         content:
@@ -494,7 +494,7 @@ function RelatoriosPage() {
         .replace(/</g, "&lt;")
         .replace(/>/g, "&gt;");
     const html = `<html xmlns:x="urn:schemas-microsoft-com:office:excel"><head><meta charset="utf-8"/></head><body>
-      <p><b>Relatório de Produção — LactoControl</b></p>
+      <p><b>Relatório de Produção — Lacto Control</b></p>
       <p>Gerado em: ${new Date().toLocaleString("pt-BR")}</p>
       <p>Filtros: ${esc(filtrosResumo())}</p>
       <table border="1"><thead><tr>${headers.map((h) => `<th>${esc(h)}</th>`).join("")}</tr></thead>

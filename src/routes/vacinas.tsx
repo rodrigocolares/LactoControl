@@ -30,7 +30,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/vacinas")({
   head: () => ({
     meta: [
-      { title: "Vacinas — LactoControl" },
+      { title: "Vacinas — Lacto Control" },
       {
         name: "description",
         content: "Catálogo de vacinas e periodicidades.",

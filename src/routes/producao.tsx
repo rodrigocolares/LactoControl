@@ -29,7 +29,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/producao")({
   head: () => ({
     meta: [
-      { title: "Produção mensal — LactoControl" },
+      { title: "Produção mensal — Lacto Control" },
       {
         name: "description",
         content: "Registro mensal de produção de leite por vaca.",

@@ -31,7 +31,7 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/vacas/")({
   head: () => ({
     meta: [
-      { title: "Vacas — LactoControl" },
+      { title: "Vacas — Lacto Control" },
       {
         name: "description",
         content: "Cadastro e listagem das vacas do rebanho.",
