@@ -1017,9 +1017,12 @@ function RelatoriosPage() {
                   yAxisId="left"
                   dataKey="total"
                   name="Produção total (L)"
-                  fill="hsl(var(--primary))"
                   radius={[6, 6, 0, 0]}
-                />
+                >
+                  {mensal.map((m) => (
+                    <Cell key={m.key} fill={getCategoryColor(`mes-${m.mes}`)} />
+                  ))}
+                </Bar>
                 <Line
                   yAxisId="right"
                   type="monotone"
