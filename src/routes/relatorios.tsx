@@ -795,28 +795,31 @@ function RelatoriosPage() {
                   content={<CustomTooltip suffix=" L" labelKey="labelLongo" />}
                 />
                 <Bar dataKey="total" radius={[6, 6, 0, 0]}>
-                  {mensal.map((m) => (
-                    <Cell
-                      key={m.key}
-                      fill={
-                        mesMaior && m.key === mesMaior.key
-                          ? "hsl(var(--chart-1))"
-                          : mesMenor && m.key === mesMenor.key
-                            ? "hsl(var(--destructive))"
-                            : "hsl(var(--primary))"
-                      }
-                    />
-                  ))}
+                  {mensal.map((m) => {
+                    const highlight =
+                      (mesMaior && m.key === mesMaior.key) ||
+                      (mesMenor && m.key === mesMenor.key);
+                    return (
+                      <Cell
+                        key={m.key}
+                        fill={getCategoryColor(`mes-${m.mes}`)}
+                        stroke={
+                          mesMaior && m.key === mesMaior.key
+                            ? "hsl(var(--success))"
+                            : mesMenor && m.key === mesMenor.key
+                              ? "hsl(var(--destructive))"
+                              : undefined
+                        }
+                        strokeWidth={highlight ? 3 : 0}
+                      />
+                    );
+                  })}
                 </Bar>
               </BarChart>
             </ResponsiveContainer>
             <LegendRow>
-              <LegendDot color="hsl(var(--chart-1))" label="Maior mês" />
-              <LegendDot
-                color="hsl(var(--destructive))"
-                label="Menor mês"
-              />
-              <LegendDot color="hsl(var(--primary))" label="Demais meses" />
+              <LegendDot color="hsl(var(--success))" label="Maior mês (borda verde)" />
+              <LegendDot color="hsl(var(--destructive))" label="Menor mês (borda vermelha)" />
             </LegendRow>
           </ChartCard>
 
