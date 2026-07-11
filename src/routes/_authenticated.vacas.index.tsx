@@ -223,6 +223,22 @@ export function VacaFormDialog({
             onChange={(e) => setForm({ ...form, nome: e.target.value })}
           />
         </Field>
+        <Field label="Nome da Fazenda">
+          <Input
+            placeholder="Informe o nome da fazenda"
+            value={form.fazenda ?? ""}
+            onChange={(e) => {
+              setFazendaTouched(true);
+              setForm({ ...form, fazenda: e.target.value });
+            }}
+          />
+        </Field>
+        <Field label="Brinco">
+          <Input
+            value={form.brinco}
+            onChange={(e) => setForm({ ...form, brinco: e.target.value })}
+          />
+        </Field>
         <Field label="Brinco">
           <Input
             value={form.brinco}
