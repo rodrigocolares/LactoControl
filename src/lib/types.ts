@@ -3,6 +3,7 @@ export type StatusVaca = "lactacao" | "seca" | "prenha" | "descartada";
 export interface Vaca {
   id: string;
   nome: string;
+  fazenda?: string;
   brinco: string;
   raca: string;
   dataNascimento: string; // ISO

@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
 import { actions, useStore } from "@/lib/store";
 import type { StatusVaca, Vaca } from "@/lib/types";
@@ -160,9 +162,11 @@ export function VacaFormDialog({
   vaca?: Vaca;
   onClose: () => void;
 }) {
+  const { user } = useAuth();
   const [form, setForm] = useState<Omit<Vaca, "id">>(
     vaca ?? {
       nome: "",
+      fazenda: "",
       brinco: "",
       raca: "",
       dataNascimento: "",
@@ -172,6 +176,25 @@ export function VacaFormDialog({
       observacoes: "",
     },
   );
+  const [fazendaTouched, setFazendaTouched] = useState(false);
+
+  useEffect(() => {
+    if (vaca || !user || fazendaTouched) return;
+    let cancelled = false;
+    supabase
+      .from("profiles")
+      .select("farm_name")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled || fazendaTouched) return;
+        const farm = data?.farm_name?.trim();
+        if (farm) setForm((f) => (f.fazenda ? f : { ...f, fazenda: farm }));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user, vaca, fazendaTouched]);
 
   const submit = () => {
     if (!form.nome.trim() || !form.brinco.trim()) {
@@ -198,6 +221,16 @@ export function VacaFormDialog({
           <Input
             value={form.nome}
             onChange={(e) => setForm({ ...form, nome: e.target.value })}
+          />
+        </Field>
+        <Field label="Nome da Fazenda">
+          <Input
+            placeholder="Informe o nome da fazenda"
+            value={form.fazenda ?? ""}
+            onChange={(e) => {
+              setFazendaTouched(true);
+              setForm({ ...form, fazenda: e.target.value });
+            }}
           />
         </Field>
         <Field label="Brinco">
