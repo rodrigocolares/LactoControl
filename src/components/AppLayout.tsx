@@ -189,6 +189,52 @@ function UserMenu({ onNavigate }: { onNavigate: () => void }) {
   );
 }
 
+function LogoutNavButton({ onNavigate }: { onNavigate: () => void }) {
+  const { signOut } = useAuth();
+  const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [loading, setLoading] = useState(false);
+
+  const handleClick = async () => {
+    if (loading) return;
+    setLoading(true);
+    try {
+      await queryClient.cancelQueries();
+      queryClient.clear();
+      await signOut();
+      onNavigate();
+      toast.success("Sessão encerrada com sucesso. Até logo!");
+      navigate({ to: "/auth", replace: true });
+    } catch {
+      toast.error("Não foi possível finalizar sua sessão. Tente novamente.");
+      setLoading(false);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={loading}
+      title="Sair"
+      className={cn(
+        "flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors",
+        "text-sidebar-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground",
+        "disabled:cursor-not-allowed disabled:opacity-60",
+      )}
+    >
+      {loading ? (
+        <Loader2 className="size-4 shrink-0 animate-spin" />
+      ) : (
+        <LogOut className="size-4 shrink-0" />
+      )}
+      <span className="truncate">Sair</span>
+    </button>
+  );
+}
+
+
+
 
 export function PageHeader({
   title,
