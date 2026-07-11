@@ -239,12 +239,6 @@ export function VacaFormDialog({
             onChange={(e) => setForm({ ...form, brinco: e.target.value })}
           />
         </Field>
-        <Field label="Brinco">
-          <Input
-            value={form.brinco}
-            onChange={(e) => setForm({ ...form, brinco: e.target.value })}
-          />
-        </Field>
         <Field label="Raça">
           <Input
             value={form.raca}
