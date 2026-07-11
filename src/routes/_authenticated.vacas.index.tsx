@@ -162,9 +162,11 @@ export function VacaFormDialog({
   vaca?: Vaca;
   onClose: () => void;
 }) {
+  const { user } = useAuth();
   const [form, setForm] = useState<Omit<Vaca, "id">>(
     vaca ?? {
       nome: "",
+      fazenda: "",
       brinco: "",
       raca: "",
       dataNascimento: "",
@@ -174,6 +176,25 @@ export function VacaFormDialog({
       observacoes: "",
     },
   );
+  const [fazendaTouched, setFazendaTouched] = useState(false);
+
+  useEffect(() => {
+    if (vaca || !user || fazendaTouched) return;
+    let cancelled = false;
+    supabase
+      .from("profiles")
+      .select("farm_name")
+      .eq("id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        if (cancelled || fazendaTouched) return;
+        const farm = data?.farm_name?.trim();
+        if (farm) setForm((f) => (f.fazenda ? f : { ...f, fazenda: farm }));
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [user, vaca, fazendaTouched]);
 
   const submit = () => {
     if (!form.nome.trim() || !form.brinco.trim()) {
