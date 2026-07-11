@@ -101,6 +101,7 @@ export function AppLayout({ children }: { children: ReactNode }) {
                 </Link>
               );
             })}
+            <LogoutNavButton onNavigate={() => setOpen(false)} />
           </nav>
           <div className="mt-auto border-t border-sidebar-border p-3">
             <UserMenu onNavigate={() => setOpen(false)} />
