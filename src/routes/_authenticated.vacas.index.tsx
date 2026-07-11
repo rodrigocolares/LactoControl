@@ -1,5 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { useAuth } from "@/hooks/use-auth";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
 import { actions, useStore } from "@/lib/store";
 import type { StatusVaca, Vaca } from "@/lib/types";
