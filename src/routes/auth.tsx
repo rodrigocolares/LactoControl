@@ -25,6 +25,16 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s) => searchSchema.parse(s),
+  head: () => ({
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: (authBackgroundHref as unknown as string),
+        fetchpriority: "high",
+      },
+    ],
+  }),
   component: AuthPage,
 });
 
