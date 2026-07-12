@@ -14,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AuthBackground } from "@/components/AuthBackground";
+
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
