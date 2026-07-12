@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent } from "@/components/ui/card";
+import { AuthBackground } from "@/components/AuthBackground";
+
 
 export const Route = createFileRoute("/reset-password")({
   component: ResetPasswordPage,
@@ -67,15 +69,15 @@ function ResetPasswordPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 px-4 py-10">
-      <div className="mx-auto flex max-w-md flex-col items-center">
-        <div className="mb-6 flex items-center gap-3">
+    <AuthBackground>
+      <div className="mx-auto flex w-full max-w-[480px] flex-col items-center">
+        <div className="mb-6 flex items-center gap-3 text-white drop-shadow">
           <div className="grid size-12 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
             <Droplet className="size-6" />
           </div>
           <div className="text-xl font-bold tracking-tight">Lacto Control</div>
         </div>
-        <Card className="w-full">
+        <Card className="w-full border-white/20 bg-white/95 shadow-2xl backdrop-blur-md supports-[backdrop-filter]:bg-white/85 dark:bg-card/90">
           <CardContent className="pt-6">
             <h1 className="text-xl font-bold">Redefinir senha</h1>
             <p className="mt-1 text-sm text-muted-foreground">Escolha uma nova senha segura para sua conta.</p>
@@ -115,9 +117,10 @@ function ResetPasswordPage() {
           </CardContent>
         </Card>
       </div>
-    </div>
+    </AuthBackground>
   );
 }
+
 
 function StrengthBar({ password }: { password: string }) {
   let score = 0;

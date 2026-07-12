@@ -14,6 +14,8 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { AuthBackground } from "@/components/AuthBackground";
+
 
 const searchSchema = z.object({
   redirect: z.string().optional(),
@@ -49,19 +51,19 @@ function AuthPage() {
   }, [navigate, search.redirect]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-primary/5 via-background to-primary/10 px-4 py-10">
-      <div className="mx-auto flex max-w-md flex-col items-center">
-        <div className="mb-6 flex items-center gap-3">
+    <AuthBackground>
+      <div className="mx-auto flex w-full max-w-[480px] flex-col items-center">
+        <div className="mb-6 flex items-center gap-3 text-white drop-shadow">
           <div className="grid size-12 place-items-center rounded-2xl bg-primary text-primary-foreground shadow-lg">
             <Droplet className="size-6" />
           </div>
           <div>
             <div className="text-xl font-bold tracking-tight">Lacto Control</div>
-            <div className="text-xs text-muted-foreground">Gestão leiteira</div>
+            <div className="text-xs text-white/80">Gestão leiteira</div>
           </div>
         </div>
 
-        <Card className="w-full">
+        <Card className="w-full border-white/20 bg-white/95 shadow-2xl backdrop-blur-md supports-[backdrop-filter]:bg-white/85 dark:bg-card/90">
           <CardContent className="pt-6">
             <div className="mb-5 text-center">
               <h1 className="text-2xl font-bold tracking-tight">Bem-vindo ao Lacto Control</h1>
@@ -94,21 +96,21 @@ function AuthPage() {
           </CardContent>
         </Card>
 
-        <p className="mt-6 text-center text-xs text-muted-foreground">
+        <p className="mt-6 text-center text-xs text-white/90 drop-shadow">
           Ao continuar, você concorda com os{" "}
-          <Link to="/termos-de-uso" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+          <Link to="/termos-de-uso" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">
             Termos de Uso
           </Link>{" "}
           e a{" "}
-          <Link to="/politica-de-privacidade" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+          <Link to="/politica-de-privacidade" target="_blank" rel="noopener noreferrer" className="underline hover:text-white">
             Política de Privacidade
           </Link>.
         </p>
-
       </div>
-    </div>
+    </AuthBackground>
   );
 }
+
 
 function LoginForm() {
   const [email, setEmail] = useState("");
