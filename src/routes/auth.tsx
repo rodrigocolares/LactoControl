@@ -89,8 +89,16 @@ function AuthPage() {
         </Card>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Ao continuar, você concorda com os termos de uso e política de privacidade.
+          Ao continuar, você concorda com os{" "}
+          <Link to="/termos-de-uso" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            Termos de Uso
+          </Link>{" "}
+          e a{" "}
+          <Link to="/politica-de-privacidade" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            Política de Privacidade
+          </Link>.
         </p>
+
       </div>
     </div>
   );
