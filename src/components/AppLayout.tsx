@@ -11,6 +11,8 @@ import {
   LogOut,
   Settings,
   ShieldCheck,
+  Gauge,
+
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -31,12 +33,14 @@ import {
 
 const nav = [
   { to: "/", label: "Dashboard", icon: LayoutDashboard },
+  { to: "/executivo", label: "Executivo", icon: Gauge },
   { to: "/vacas", label: "Vacas", icon: Beef },
   { to: "/producao", label: "Produção", icon: Droplet },
   { to: "/vacinacao", label: "Vacinação", icon: Syringe },
   { to: "/vacinas", label: "Vacinas", icon: Syringe },
   { to: "/relatorios", label: "Relatórios", icon: FileBarChart },
   { to: "/auditoria", label: "Auditoria", icon: ShieldCheck },
+
 ] as const;
 
 
