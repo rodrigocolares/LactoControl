@@ -11,7 +11,19 @@ import { Card, CardContent } from "@/components/ui/card";
 import { AuthBackground } from "@/components/AuthBackground";
 
 
+import { authBackground } from "@/config/background";
+
 export const Route = createFileRoute("/reset-password")({
+  head: () => ({
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: authBackground.image,
+        fetchpriority: "high",
+      },
+    ],
+  }),
   component: ResetPasswordPage,
 });
 
