@@ -54,10 +54,10 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
     // 3) Admin client — apenas dentro do handler.
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
 
-    const step = async (label: string, fn: () => Promise<{ error: unknown } | void>) => {
+    const step = async (label: string, thenable: PromiseLike<{ error: unknown }>) => {
       try {
-        const r = await fn();
-        if (r && "error" in r && r.error) {
+        const r = await thenable;
+        if (r.error) {
           console.error(`[deleteMyAccount] ${label} error`, r.error);
           throw new Error(`Falha ao excluir: ${label}`);
         }
@@ -68,30 +68,27 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
     };
 
     if (propertyIds.length > 0) {
-      await step("aplicações vacinais", () =>
+      await step(
+        "aplicações vacinais",
         supabaseAdmin.from("vaccination_records").delete().in("property_id", propertyIds),
       );
-      await step("produções de leite", () =>
+      await step(
+        "produções de leite",
         supabaseAdmin.from("milk_productions").delete().in("property_id", propertyIds),
       );
-      await step("vacinas", () =>
-        supabaseAdmin.from("vaccines").delete().in("property_id", propertyIds),
-      );
-      await step("vacas", () =>
-        supabaseAdmin.from("cows").delete().in("property_id", propertyIds),
-      );
-      await step("migrações", () =>
+      await step("vacinas", supabaseAdmin.from("vaccines").delete().in("property_id", propertyIds));
+      await step("vacas", supabaseAdmin.from("cows").delete().in("property_id", propertyIds));
+      await step(
+        "migrações",
         supabaseAdmin.from("data_migrations").delete().in("property_id", propertyIds),
       );
     }
 
     // Perfil (FK -> auth.users) — antes de excluir a propriedade para não bloquear vínculo.
-    await step("perfil", () => supabaseAdmin.from("profiles").delete().eq("id", userId));
+    await step("perfil", supabaseAdmin.from("profiles").delete().eq("id", userId));
 
     if (propertyIds.length > 0) {
-      await step("propriedade", () =>
-        supabaseAdmin.from("properties").delete().in("id", propertyIds),
-      );
+      await step("propriedade", supabaseAdmin.from("properties").delete().in("id", propertyIds));
     }
 
     // Registro final de encerramento (sem dados pessoais)
