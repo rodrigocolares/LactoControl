@@ -24,8 +24,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Search, Syringe, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { EmptyState } from "@/components/EmptyState";
+import { SkeletonCardGrid } from "@/components/Skeletons";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
+
 
 export const Route = createFileRoute("/_authenticated/vacinas")({
   head: () => ({
@@ -51,7 +55,20 @@ const periodicidades: Periodicidade[] = [
 
 function VacinasPage() {
   const vacinas = useStore((s) => s.vacinas);
+  const ready = useStore((s) => s.ready);
   const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const debouncedQ = useDebouncedValue(q, 180);
+
+  const filtered = vacinas.filter((v) => {
+    const needle = debouncedQ.trim().toLowerCase();
+    if (!needle) return true;
+    return (
+      v.nome.toLowerCase().includes(needle) ||
+      v.doenca.toLowerCase().includes(needle) ||
+      v.fabricante.toLowerCase().includes(needle)
+    );
+  });
 
   return (
     <AppLayout>
@@ -70,47 +87,87 @@ function VacinasPage() {
         }
       />
 
-      <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
-        {vacinas.map((v) => (
-          <Card key={v.id} className="p-4">
-            <div className="flex items-start justify-between gap-2">
-              <div className="min-w-0">
-                <div className="truncate text-base font-bold">{v.nome}</div>
-                <div className="text-xs text-muted-foreground">{v.doenca}</div>
-              </div>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => {
-                  if (confirm("Excluir vacina?")) {
-                    actions.deleteVacina(v.id);
-                    toast.success("Excluída.");
-                  }
-                }}
-              >
-                <Trash2 className="size-4" />
-              </Button>
-            </div>
-            <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-              <Info label="Fabricante" value={v.fabricante} />
-              <Info label="Doses" value={v.doses} />
-              <Info
-                label="Periodicidade"
-                value={periodicidadeLabel[v.periodicidade]}
+      {!ready ? (
+        <SkeletonCardGrid count={6} />
+      ) : vacinas.length === 0 ? (
+        <Card className="p-4">
+          <EmptyState
+            icon={Syringe}
+            title="Nenhuma vacina no catálogo"
+            description="Cadastre as vacinas utilizadas na propriedade para poder registrar aplicações e acompanhar o calendário sanitário."
+            action={{
+              label: "Cadastrar primeira vacina",
+              node: (
+                <Button onClick={() => setOpen(true)}>
+                  <Plus className="mr-2 size-4" /> Cadastrar primeira vacina
+                </Button>
+              ),
+            }}
+          />
+        </Card>
+      ) : (
+        <>
+          <Card className="p-3">
+            <div className="relative">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por nome, doença ou fabricante"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                className="pl-9"
+                aria-label="Buscar vacinas"
               />
-              <Info label="Carência" value={`${v.carencia} dias`} />
             </div>
           </Card>
-        ))}
-        {vacinas.length === 0 && (
-          <div className="col-span-full py-8 text-center text-sm text-muted-foreground">
-            Nenhuma vacina cadastrada.
+          <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
+            {filtered.map((v) => (
+              <Card key={v.id} className="p-4">
+                <div className="flex items-start justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="truncate text-base font-bold">{v.nome}</div>
+                    <div className="text-xs text-muted-foreground">{v.doenca}</div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => {
+                      if (confirm("Excluir vacina?")) {
+                        actions.deleteVacina(v.id);
+                        toast.success("Excluída.");
+                      }
+                    }}
+                  >
+                    <Trash2 className="size-4" />
+                  </Button>
+                </div>
+                <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                  <Info label="Fabricante" value={v.fabricante} />
+                  <Info label="Doses" value={v.doses} />
+                  <Info
+                    label="Periodicidade"
+                    value={periodicidadeLabel[v.periodicidade]}
+                  />
+                  <Info label="Carência" value={`${v.carencia} dias`} />
+                </div>
+              </Card>
+            ))}
+            {filtered.length === 0 && (
+              <div className="col-span-full">
+                <EmptyState
+                  compact
+                  icon={Search}
+                  title="Nenhuma vacina encontrada"
+                  description="Ajuste a busca para ver mais resultados."
+                />
+              </div>
+            )}
           </div>
-        )}
-      </div>
+        </>
+      )}
     </AppLayout>
   );
 }
+
 
 function Info({ label, value }: { label: string; value: React.ReactNode }) {
   return (
