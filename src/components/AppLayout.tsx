@@ -10,6 +10,7 @@ import {
   UserCircle,
   LogOut,
   Settings,
+  ShieldCheck,
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -18,6 +19,7 @@ import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/hooks/use-auth";
+import { MigrationWizard } from "@/components/MigrationWizard";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -34,7 +36,9 @@ const nav = [
   { to: "/vacinacao", label: "Vacinação", icon: Syringe },
   { to: "/vacinas", label: "Vacinas", icon: Syringe },
   { to: "/relatorios", label: "Relatórios", icon: FileBarChart },
+  { to: "/auditoria", label: "Auditoria", icon: ShieldCheck },
 ] as const;
+
 
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
@@ -119,9 +123,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <div className="mx-auto w-full max-w-7xl p-4 md:p-8">{children}</div>
         </main>
       </div>
+      <MigrationWizard />
     </div>
   );
 }
+
 
 function Logo() {
   return (

@@ -9,6 +9,33 @@ import type {
   Vacina,
 } from "./types";
 
+export type MigrationStatus =
+  | "idle"
+  | "checking"
+  | "pending"
+  | "running"
+  | "completed"
+  | "error";
+
+export interface MigrationInfo {
+  status: MigrationStatus;
+  counts: {
+    vacas: number;
+    producoes: number;
+    vacinas: number;
+    aplicacoes: number;
+  };
+  processed: {
+    vacas: number;
+    producoes: number;
+    vacinas: number;
+    aplicacoes: number;
+  };
+  failed: number;
+  errors: string[];
+  backupFilename?: string;
+}
+
 export interface AppState {
   vacas: Vaca[];
   producoes: ProducaoMensal[];
@@ -16,10 +43,20 @@ export interface AppState {
   aplicacoes: AplicacaoVacina[];
   ready: boolean;
   propertyId: string | null;
+  migration: MigrationInfo;
 }
 
 const LEGACY_KEY = "lactocontrol-v1";
+const MIGRATED_FLAG = "lactocontrol-v1-migrated";
 const MIGRATION_KEY = "localstorage_v1";
+
+const emptyMigration: MigrationInfo = {
+  status: "idle",
+  counts: { vacas: 0, producoes: 0, vacinas: 0, aplicacoes: 0 },
+  processed: { vacas: 0, producoes: 0, vacinas: 0, aplicacoes: 0 },
+  failed: 0,
+  errors: [],
+};
 
 const empty: AppState = {
   vacas: [],
@@ -28,6 +65,7 @@ const empty: AppState = {
   aplicacoes: [],
   ready: false,
   propertyId: null,
+  migration: emptyMigration,
 };
 
 let state: AppState = empty;
@@ -37,6 +75,10 @@ function emit() {
 }
 function setState(patch: Partial<AppState>) {
   state = { ...state, ...patch };
+  emit();
+}
+function setMigration(patch: Partial<MigrationInfo>) {
+  state = { ...state, migration: { ...state.migration, ...patch } };
   emit();
 }
 
@@ -82,6 +124,9 @@ function mapProdRow(r: any): ProducaoMensal {
     observacoes: r.notes ?? undefined,
   };
 }
+function daysInMonth(y: number, m: number) {
+  return new Date(y, m, 0).getDate();
+}
 function prodInsertPayload(p: Omit<ProducaoMensal, "id">, propertyId: string, userId: string) {
   const days = daysInMonth(p.ano, p.mes);
   return {
@@ -95,9 +140,6 @@ function prodInsertPayload(p: Omit<ProducaoMensal, "id">, propertyId: string, us
     daily_average: Number(p.totalLitros) / days,
     notes: p.observacoes || null,
   };
-}
-function daysInMonth(y: number, m: number) {
-  return new Date(y, m, 0).getDate();
 }
 
 function mapVaccineRow(r: any): Vacina {
@@ -189,7 +231,7 @@ async function ensureProperty(userId: string): Promise<string | null> {
   return created?.id ?? null;
 }
 
-/* ------------------------- localStorage migration ----------------------- */
+/* ------------------------------- backup --------------------------------- */
 
 interface LegacyState {
   vacas?: any[];
@@ -198,31 +240,107 @@ interface LegacyState {
   aplicacoes?: any[];
 }
 
-async function migrateLegacyIfNeeded(userId: string, propertyId: string) {
-  if (typeof window === "undefined") return;
+function readLegacy(): LegacyState | null {
+  if (typeof window === "undefined") return null;
   const raw = localStorage.getItem(LEGACY_KEY);
-  if (!raw) return;
-  let legacy: LegacyState;
+  if (!raw) return null;
   try {
-    legacy = JSON.parse(raw);
+    return JSON.parse(raw) as LegacyState;
   } catch {
-    return;
+    return null;
   }
-  const hasData =
-    (legacy.vacas?.length ?? 0) +
-      (legacy.producoes?.length ?? 0) +
-      (legacy.vacinas?.length ?? 0) +
-      (legacy.aplicacoes?.length ?? 0) >
-    0;
-  if (!hasData) return;
+}
+
+export function downloadLocalBackup(): boolean {
+  const raw = typeof window !== "undefined" ? localStorage.getItem(LEGACY_KEY) : null;
+  if (!raw) return false;
+  const blob = new Blob([raw], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  a.href = url;
+  a.download = `lactocontrol-backup-${stamp}.json`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  URL.revokeObjectURL(url);
+  return true;
+}
+
+export function deleteLocalBackup(): void {
+  if (typeof window === "undefined") return;
+  localStorage.removeItem(LEGACY_KEY);
+  // also cleanup any *-backup-* copies
+  Object.keys(localStorage)
+    .filter((k) => k.startsWith(`${LEGACY_KEY}-backup-`))
+    .forEach((k) => localStorage.removeItem(k));
+}
+
+export function hasLocalBackup(): boolean {
+  if (typeof window === "undefined") return false;
+  if (localStorage.getItem(LEGACY_KEY)) return true;
+  return Object.keys(localStorage).some((k) => k.startsWith(`${LEGACY_KEY}-backup-`));
+}
+
+/* ------------------------------- migration ------------------------------ */
+
+async function detectPendingMigration(userId: string) {
+  if (typeof window === "undefined") return;
+  if (localStorage.getItem(MIGRATED_FLAG)) return;
+  const legacy = readLegacy();
+  if (!legacy) return;
+  const counts = {
+    vacas: legacy.vacas?.length ?? 0,
+    producoes: legacy.producoes?.length ?? 0,
+    vacinas: legacy.vacinas?.length ?? 0,
+    aplicacoes: legacy.aplicacoes?.length ?? 0,
+  };
+  if (counts.vacas + counts.producoes + counts.vacinas + counts.aplicacoes === 0) return;
 
   const { data: mig } = await supabase
     .from("data_migrations")
-    .select("id, status")
+    .select("status")
     .eq("user_id", userId)
     .eq("migration_key", MIGRATION_KEY)
     .maybeSingle();
-  if (mig?.status === "completed") return;
+  if (mig?.status === "completed") {
+    localStorage.setItem(MIGRATED_FLAG, "1");
+    return;
+  }
+  setMigration({
+    status: "pending",
+    counts,
+    processed: { vacas: 0, producoes: 0, vacinas: 0, aplicacoes: 0 },
+    failed: 0,
+    errors: [],
+  });
+}
+
+export async function runMigration(): Promise<void> {
+  const legacy = readLegacy();
+  if (!legacy) {
+    setMigration({ status: "completed" });
+    return;
+  }
+  const { data: sess } = await supabase.auth.getSession();
+  const userId = sess.session?.user?.id;
+  if (!userId) throw new Error("Sessão expirada.");
+  const propertyId = state.propertyId ?? (await ensureProperty(userId));
+  if (!propertyId) throw new Error("Não foi possível criar a propriedade.");
+
+  // backup filename (already saved copies in localStorage since previous step)
+  const stamp = new Date().toISOString().replace(/[:.]/g, "-");
+  const backupFilename = `lactocontrol-backup-${stamp}.json`;
+  try {
+    localStorage.setItem(
+      `${LEGACY_KEY}-backup-${stamp}`,
+      localStorage.getItem(LEGACY_KEY) ?? "",
+    );
+  } catch {
+    /* quota */
+  }
+
+  setMigration({ status: "running", backupFilename });
 
   const { data: migRow } = await supabase
     .from("data_migrations")
@@ -239,11 +357,13 @@ async function migrateLegacyIfNeeded(userId: string, propertyId: string) {
     .select("id")
     .single();
 
-  let processed = 0;
   let failed = 0;
   const errors: string[] = [];
+  const processed = { vacas: 0, producoes: 0, vacinas: 0, aplicacoes: 0 };
+  const bump = () =>
+    setMigration({ processed: { ...processed }, failed, errors: [...errors] });
 
-  // 1) cows — with legacy_local_id
+  // 1) cows
   const cowIdMap = new Map<string, string>();
   for (const v of legacy.vacas ?? []) {
     try {
@@ -273,11 +393,12 @@ async function migrateLegacyIfNeeded(userId: string, propertyId: string) {
         .single();
       if (error) throw error;
       cowIdMap.set(String(v.id), data.id);
-      processed++;
+      processed.vacas++;
     } catch (e: any) {
       failed++;
-      errors.push(`vaca ${v.id}: ${e.message ?? e}`);
+      errors.push(`vaca ${v.nome ?? v.id}: ${e.message ?? e}`);
     }
+    bump();
   }
 
   // 2) vaccines
@@ -311,17 +432,23 @@ async function migrateLegacyIfNeeded(userId: string, propertyId: string) {
         .single();
       if (error) throw error;
       vacIdMap.set(String(vac.id), data.id);
-      processed++;
+      processed.vacinas++;
     } catch (e: any) {
       failed++;
-      errors.push(`vacina ${vac.id}: ${e.message ?? e}`);
+      errors.push(`vacina ${vac.nome ?? vac.id}: ${e.message ?? e}`);
     }
+    bump();
   }
 
   // 3) productions
   for (const p of legacy.producoes ?? []) {
     const cowId = cowIdMap.get(String(p.vacaId));
-    if (!cowId) continue;
+    if (!cowId) {
+      failed++;
+      errors.push(`producao ${p.id}: vaca não encontrada`);
+      bump();
+      continue;
+    }
     try {
       const { error } = await supabase.from("milk_productions").upsert(
         {
@@ -342,18 +469,24 @@ async function migrateLegacyIfNeeded(userId: string, propertyId: string) {
         { onConflict: "property_id,legacy_local_id" },
       );
       if (error) throw error;
-      processed++;
+      processed.producoes++;
     } catch (e: any) {
       failed++;
       errors.push(`producao ${p.id}: ${e.message ?? e}`);
     }
+    bump();
   }
 
   // 4) applications
   for (const a of legacy.aplicacoes ?? []) {
     const cowId = cowIdMap.get(String(a.vacaId));
     const vacId = vacIdMap.get(String(a.vacinaId));
-    if (!cowId || !vacId) continue;
+    if (!cowId || !vacId) {
+      failed++;
+      errors.push(`aplicacao ${a.id}: vínculo não encontrado`);
+      bump();
+      continue;
+    }
     try {
       const { error } = await supabase.from("vaccination_records").upsert(
         {
@@ -376,12 +509,16 @@ async function migrateLegacyIfNeeded(userId: string, propertyId: string) {
         { onConflict: "property_id,legacy_local_id" },
       );
       if (error) throw error;
-      processed++;
+      processed.aplicacoes++;
     } catch (e: any) {
       failed++;
       errors.push(`aplicacao ${a.id}: ${e.message ?? e}`);
     }
+    bump();
   }
+
+  const totalProcessed =
+    processed.vacas + processed.producoes + processed.vacinas + processed.aplicacoes;
 
   if (migRow?.id) {
     await supabase
@@ -389,20 +526,25 @@ async function migrateLegacyIfNeeded(userId: string, propertyId: string) {
       .update({
         status: failed === 0 ? "completed" : "completed_with_errors",
         completed_at: new Date().toISOString(),
-        records_processed: processed,
+        records_processed: totalProcessed,
         records_failed: failed,
-        error_details: errors.length ? ({ errors: errors.slice(0, 50) } as any) : null,
+        error_details: errors.length ? ({ errors: errors.slice(0, 100) } as any) : null,
       })
       .eq("id", migRow.id);
   }
 
-  // Backup + mark local as migrated, do not delete
-  try {
-    localStorage.setItem(`${LEGACY_KEY}-backup-${Date.now()}`, raw);
-    localStorage.setItem(`${LEGACY_KEY}-migrated`, "1");
-  } catch {
-    /* ignore quota */
-  }
+  localStorage.setItem(MIGRATED_FLAG, "1");
+  setMigration({
+    status: failed === 0 ? "completed" : "error",
+    processed: { ...processed },
+    failed,
+    errors: [...errors],
+  });
+  await fetchAll(propertyId);
+}
+
+export function dismissMigration() {
+  setMigration({ status: "idle" });
 }
 
 /* ------------------------------- loading -------------------------------- */
@@ -433,11 +575,7 @@ async function bootstrap(userId: string) {
   loadingPromise = (async () => {
     const propertyId = await ensureProperty(userId);
     if (!propertyId) return;
-    try {
-      await migrateLegacyIfNeeded(userId, propertyId);
-    } catch (e) {
-      console.error("[LactoControl] legacy migration error", e);
-    }
+    await detectPendingMigration(userId);
     await fetchAll(propertyId);
   })();
   try {
@@ -486,13 +624,13 @@ if (typeof window !== "undefined") {
     const uid = session?.user?.id ?? null;
     if (event === "SIGNED_OUT" || !uid) {
       currentUserId = null;
-      state = empty;
+      state = { ...empty, migration: { ...emptyMigration } };
       emit();
       return;
     }
     if (uid !== currentUserId) {
       currentUserId = uid;
-      state = { ...empty };
+      state = { ...empty, migration: { ...emptyMigration } };
       emit();
       void bootstrap(uid);
     }
@@ -511,7 +649,7 @@ export const store = {
     if (currentUserId) await bootstrap(currentUserId);
   },
   reset: () => {
-    state = empty;
+    state = { ...empty, migration: { ...emptyMigration } };
     emit();
   },
 };
@@ -560,7 +698,11 @@ export const actions = {
     await reloadTable("cows");
   },
   deleteVaca: async (id: string) => {
-    const { error } = await supabase.from("cows").delete().eq("id", id);
+    // soft-delete to preserve history
+    const { error } = await supabase
+      .from("cows")
+      .update({ deleted_at: new Date().toISOString() })
+      .eq("id", id);
     if (error) throw error;
     await reloadTable("cows");
   },
@@ -590,7 +732,8 @@ export const actions = {
     await reloadTable("vaccines");
   },
   deleteVacina: async (id: string) => {
-    const { error } = await supabase.from("vaccines").delete().eq("id", id);
+    // deactivate instead of hard delete to preserve records
+    const { error } = await supabase.from("vaccines").update({ active: false }).eq("id", id);
     if (error) throw error;
     await reloadTable("vaccines");
   },
