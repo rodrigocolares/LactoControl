@@ -68,6 +68,11 @@ function AuthPage() {
               <p className="mt-1 text-sm text-muted-foreground">
                 Acesse sua conta para gerenciar o rebanho, a produção de leite e o controle vacinal.
               </p>
+              {search.deleted === "1" && (
+                <div className="mt-4 rounded-md border border-primary/30 bg-primary/5 p-3 text-sm text-primary">
+                  Sua conta foi encerrada e seus dados foram excluídos com sucesso.
+                </div>
+              )}
             </div>
 
             <Tabs value={tab} onValueChange={setTab}>
