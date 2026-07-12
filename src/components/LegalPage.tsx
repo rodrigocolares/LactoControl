@@ -68,9 +68,10 @@ export function LegalPage({
             </ul>
           </nav>
 
-          <article className="prose prose-slate max-w-none text-foreground dark:prose-invert prose-headings:scroll-mt-20 prose-headings:text-foreground prose-p:leading-relaxed prose-a:text-primary prose-strong:text-foreground prose-li:my-1">
+          <article className="max-w-none text-foreground leading-relaxed [&_h2]:mt-8 [&_h2]:mb-3 [&_h2]:scroll-mt-20 [&_h2]:text-xl [&_h2]:font-semibold [&_h2]:tracking-tight [&_p]:my-3 [&_ul]:my-3 [&_ul]:list-disc [&_ul]:pl-6 [&_li]:my-1 [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2 [&_strong]:font-semibold [&_section]:scroll-mt-20">
             {children}
           </article>
+
         </div>
       </main>
 
