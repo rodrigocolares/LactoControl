@@ -53,25 +53,45 @@ const statusOptions: StatusVaca[] = ["lactacao", "seca", "prenha", "descartada"]
 
 function VacasList() {
   const vacas = useStore((s) => s.vacas);
+  const ready = useStore((s) => s.ready);
   const [q, setQ] = useState("");
-  const [filterStatus, setFilterStatus] = useState<string>("todos");
+  const debouncedQ = useDebouncedValue(q, 180);
+  const [filterStatus, setFilterStatus] = usePersistentState<string>(
+    "vacas:filterStatus",
+    "todos",
+  );
   const [open, setOpen] = useState(false);
+  const favorites = useFavorites("cow");
 
-  const filtered = vacas.filter((v) => {
-    const matchQ =
-      q === "" ||
-      v.nome.toLowerCase().includes(q.toLowerCase()) ||
-      v.brinco.includes(q) ||
-      v.raca.toLowerCase().includes(q.toLowerCase());
-    const matchS = filterStatus === "todos" || v.status === filterStatus;
-    return matchQ && matchS;
-  });
+  const filtered = useMemo(() => {
+    const needle = debouncedQ.trim().toLowerCase();
+    const list = vacas.filter((v) => {
+      const matchQ =
+        needle === "" ||
+        v.nome.toLowerCase().includes(needle) ||
+        v.brinco.toLowerCase().includes(needle) ||
+        v.raca.toLowerCase().includes(needle);
+      const matchS = filterStatus === "todos" || v.status === filterStatus;
+      return matchQ && matchS;
+    });
+    // Favoritas primeiro, depois alfabético
+    return list.sort((a, b) => {
+      const fa = favorites.has(a.id) ? 0 : 1;
+      const fb = favorites.has(b.id) ? 0 : 1;
+      if (fa !== fb) return fa - fb;
+      return a.nome.localeCompare(b.nome, "pt-BR");
+    });
+  }, [vacas, debouncedQ, filterStatus, favorites]);
+
+  const hasAnyVaca = vacas.length > 0;
 
   return (
     <AppLayout>
       <PageHeader
         title="Vacas"
-        description={`${vacas.length} animais cadastrados`}
+        description={`${vacas.length} animais cadastrados${
+          favorites.ids.length ? ` · ${favorites.ids.length} favoritas` : ""
+        }`}
         actions={
           <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>
@@ -84,82 +104,133 @@ function VacasList() {
         }
       />
 
-      <Card className="p-4">
-        <div className="mb-4 flex flex-col gap-3 sm:flex-row">
-          <div className="relative flex-1">
-            <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Buscar por nome, brinco ou raça"
-              value={q}
-              onChange={(e) => setQ(e.target.value)}
-              className="pl-9"
-            />
+      {!ready ? (
+        <Card className="p-4">
+          <SkeletonCardGrid count={6} />
+        </Card>
+      ) : !hasAnyVaca ? (
+        <Card className="p-4">
+          <EmptyState
+            icon={MilkIcon}
+            title="Nenhuma vaca cadastrada"
+            description="Cadastre o primeiro animal do seu rebanho para começar a registrar produção, vacinas e acompanhar a lactação."
+            action={{
+              label: "Cadastrar primeira vaca",
+              node: (
+                <Button onClick={() => setOpen(true)}>
+                  <Plus className="mr-2 size-4" /> Cadastrar primeira vaca
+                </Button>
+              ),
+            }}
+          />
+        </Card>
+      ) : (
+        <Card className="p-4">
+          <div className="mb-4 flex flex-col gap-3 sm:flex-row">
+            <div className="relative flex-1">
+              <Search className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder="Buscar por nome, brinco ou raça"
+                value={q}
+                onChange={(e) => setQ(e.target.value)}
+                className="pl-9"
+                aria-label="Buscar vacas"
+              />
+            </div>
+            <Select value={filterStatus} onValueChange={setFilterStatus}>
+              <SelectTrigger className="sm:w-52">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="todos">Todos os status</SelectItem>
+                {statusOptions.map((s) => (
+                  <SelectItem key={s} value={s}>
+                    {statusLabel[s]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
-          <Select value={filterStatus} onValueChange={setFilterStatus}>
-            <SelectTrigger className="sm:w-52">
-              <SelectValue />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="todos">Todos os status</SelectItem>
-              {statusOptions.map((s) => (
-                <SelectItem key={s} value={s}>
-                  {statusLabel[s]}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
 
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.length === 0 && (
-            <div className="col-span-full py-8 text-center text-sm text-muted-foreground">
-              Nenhuma vaca encontrada.
+          {filtered.length === 0 ? (
+            <EmptyState
+              compact
+              icon={Search}
+              title="Nenhuma vaca encontrada"
+              description="Ajuste a busca ou o filtro de status para ver mais resultados."
+            />
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              {filtered.map((v) => {
+                const fav = favorites.has(v.id);
+                return (
+                  <div
+                    key={v.id}
+                    className="group relative rounded-xl border border-border bg-card p-4 transition-all hover:border-primary/40 hover:shadow-md"
+                  >
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        favorites.toggle(v.id);
+                      }}
+                      className="absolute right-3 top-3 grid size-8 place-items-center rounded-md text-muted-foreground transition hover:bg-muted hover:text-yellow-500"
+                      aria-label={fav ? "Remover dos favoritos" : "Marcar como favorita"}
+                      aria-pressed={fav}
+                    >
+                      <Star
+                        className={
+                          fav
+                            ? "size-4 fill-yellow-400 text-yellow-500"
+                            : "size-4"
+                        }
+                      />
+                    </button>
+                    <Link
+                      to="/vacas/$id"
+                      params={{ id: v.id }}
+                      className="block"
+                    >
+                      <div className="flex items-start justify-between gap-2 pr-8">
+                        <div className="min-w-0">
+                          <div className="truncate text-lg font-bold group-hover:text-primary">
+                            {v.nome}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            Brinco #{v.brinco} · {v.raca}
+                          </div>
+                        </div>
+                        <Badge variant="outline" className={statusColor[v.status]}>
+                          {statusLabel[v.status]}
+                        </Badge>
+                      </div>
+                      <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
+                        <div>
+                          <div className="text-muted-foreground">Último parto</div>
+                          <div className="font-medium">
+                            {formatDate(v.dataUltimoParto)}
+                          </div>
+                        </div>
+                        <div>
+                          <div className="text-muted-foreground">Início lactação</div>
+                          <div className="font-medium">
+                            {formatDate(v.dataInicioLactacao)}
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  </div>
+                );
+              })}
             </div>
           )}
-          {filtered.map((v) => (
-            <Link
-              key={v.id}
-              to="/vacas/$id"
-              params={{ id: v.id }}
-              className="group rounded-xl border border-border bg-card p-4 transition-all hover:border-primary/40 hover:shadow-md"
-            >
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <div className="truncate text-lg font-bold group-hover:text-primary">
-                    {v.nome}
-                  </div>
-                  <div className="text-xs text-muted-foreground">
-                    Brinco #{v.brinco} · {v.raca}
-                  </div>
-                </div>
-                <Badge
-                  variant="outline"
-                  className={statusColor[v.status]}
-                >
-                  {statusLabel[v.status]}
-                </Badge>
-              </div>
-              <div className="mt-3 grid grid-cols-2 gap-2 text-xs">
-                <div>
-                  <div className="text-muted-foreground">Último parto</div>
-                  <div className="font-medium">
-                    {formatDate(v.dataUltimoParto)}
-                  </div>
-                </div>
-                <div>
-                  <div className="text-muted-foreground">Início lactação</div>
-                  <div className="font-medium">
-                    {formatDate(v.dataInicioLactacao)}
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </Card>
+        </Card>
+      )}
     </AppLayout>
   );
 }
+
 
 export function VacaFormDialog({
   vaca,
