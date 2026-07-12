@@ -123,9 +123,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
           <div className="mx-auto w-full max-w-7xl p-4 md:p-8">{children}</div>
         </main>
       </div>
+      <MigrationWizard />
     </div>
   );
 }
+
 
 function Logo() {
   return (
