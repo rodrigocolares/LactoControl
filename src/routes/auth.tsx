@@ -183,9 +183,13 @@ function SignupForm({ onDone }: { onDone: () => void }) {
           full_name: form.full_name.trim(),
           farm_name: form.farm_name.trim() || null,
           phone: form.phone.trim() || null,
+          terms_accepted: true,
+          terms_version: TERMS_VERSION,
+          privacy_policy_version: PRIVACY_POLICY_VERSION,
         },
       },
     });
+
     setLoading(false);
     if (error) {
       toast.error(translateAuthError(error.message));
