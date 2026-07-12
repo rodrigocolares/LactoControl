@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Droplet, Eye, EyeOff, Loader2, Mail, Lock, User as UserIcon, Building2, Phone } from "lucide-react";
 import { toast } from "sonner";
+import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from "@/lib/legal";
+
 
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
