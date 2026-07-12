@@ -61,6 +61,8 @@ import {
 import { toast } from "sonner";
 import { cn } from "@/lib/utils";
 import { getCategoryColor } from "@/lib/chart-colors";
+import { SkeletonChart, SkeletonKPIs } from "@/components/Skeletons";
+
 
 export const Route = createFileRoute("/_authenticated/relatorios")({
   head: () => ({
