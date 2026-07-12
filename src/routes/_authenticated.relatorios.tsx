@@ -108,6 +108,8 @@ function RelatoriosPage() {
   const navigate = useNavigate();
   const vacas = useStore((s) => s.vacas);
   const producoes = useStore((s) => s.producoes);
+  const ready = useStore((s) => s.ready);
+
 
   const [draft, setDraft] = useState<Filtros>(filtrosIniciais);
   const [filtros, setFiltros] = useState<Filtros>(filtrosIniciais);
@@ -526,7 +528,24 @@ function RelatoriosPage() {
     URL.revokeObjectURL(url);
   };
 
+  if (!ready) {
+    return (
+      <AppLayout>
+        <PageHeader
+          title="Relatórios"
+          description="Análise gráfica da produção de leite do rebanho."
+        />
+        <SkeletonKPIs count={4} />
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <SkeletonChart />
+          <SkeletonChart />
+        </div>
+      </AppLayout>
+    );
+  }
+
   return (
+
     <AppLayout>
       <PageHeader
         title="Relatórios"
