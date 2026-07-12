@@ -14,8 +14,12 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
-import { Download, FileText, Loader2, RefreshCcw } from "lucide-react";
+import { Download, FileText, History, Loader2, RefreshCcw } from "lucide-react";
 import { toast } from "sonner";
+import { EmptyState } from "@/components/EmptyState";
+import { SkeletonTable } from "@/components/Skeletons";
+import { usePersistentState } from "@/hooks/use-persistent-state";
+
 
 export const Route = createFileRoute("/_authenticated/auditoria")({
   head: () => ({
@@ -68,11 +72,12 @@ const ACTION_LABEL: Record<string, string> = {
 function AuditPage() {
   const [logs, setLogs] = useState<Log[]>([]);
   const [loading, setLoading] = useState(true);
-  const [entity, setEntity] = useState<string>("todas");
-  const [action, setAction] = useState<string>("todas");
-  const [from, setFrom] = useState<string>("");
-  const [to, setTo] = useState<string>("");
-  const [userFilter, setUserFilter] = useState<string>("");
+  const [entity, setEntity] = usePersistentState<string>("audit:entity", "todas");
+  const [action, setAction] = usePersistentState<string>("audit:action", "todas");
+  const [from, setFrom] = usePersistentState<string>("audit:from", "");
+  const [to, setTo] = usePersistentState<string>("audit:to", "");
+  const [userFilter, setUserFilter] = usePersistentState<string>("audit:user", "");
+
 
   const load = async () => {
     setLoading(true);
@@ -250,14 +255,19 @@ function AuditPage() {
 
       <Card className="p-0">
         {loading ? (
-          <div className="flex items-center justify-center p-10 text-sm text-muted-foreground">
-            <Loader2 className="mr-2 size-4 animate-spin" /> Carregando...
+          <div className="p-4">
+            <SkeletonTable rows={8} cols={4} />
           </div>
         ) : logs.length === 0 ? (
-          <div className="p-10 text-center text-sm text-muted-foreground">
-            Nenhum registro de auditoria encontrado para os filtros aplicados.
+          <div className="p-6">
+            <EmptyState
+              icon={History}
+              title="Nenhum registro de auditoria"
+              description="Ainda não há eventos para os filtros aplicados. Ações como cadastros, edições e exclusões aparecerão aqui automaticamente."
+            />
           </div>
         ) : (
+
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
