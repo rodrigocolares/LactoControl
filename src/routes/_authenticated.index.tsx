@@ -34,6 +34,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useMemo } from "react";
 import { getCategoryColor } from "@/lib/chart-colors";
+import { SkeletonChart, SkeletonKPIs } from "@/components/Skeletons";
+
 
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
@@ -53,7 +55,9 @@ function Dashboard() {
   const producoes = useStore((s) => s.producoes);
   const aplicacoes = useStore((s) => s.aplicacoes);
   const vacinas = useStore((s) => s.vacinas);
+  const ready = useStore((s) => s.ready);
   const { ano, mes } = currentMonthYear();
+
 
   const producoesMes = producoes.filter(
     (p) => p.ano === ano && p.mes === mes,
@@ -138,12 +142,34 @@ function Dashboard() {
         )
       : 0;
 
+  if (!ready) {
+    return (
+      <AppLayout>
+        <PageHeader
+          title="Dashboard"
+          description="Visão geral do rebanho, produção e sanidade."
+        />
+        <SkeletonKPIs count={4} />
+        <div className="mt-4">
+          <SkeletonKPIs count={4} />
+        </div>
+        <div className="mt-6 grid gap-4 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <SkeletonChart />
+          </div>
+          <SkeletonChart />
+        </div>
+      </AppLayout>
+    );
+  }
+
   return (
     <AppLayout>
       <PageHeader
         title="Dashboard"
         description="Visão geral do rebanho, produção e sanidade."
       />
+
 
       <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
         <StatCard
