@@ -110,15 +110,17 @@ export const deleteMyAccount = createServerFn({ method: "POST" })
     }
 
     // Limpa logs anteriores vinculados ao usuário e/ou propriedade
-    await step("logs de auditoria", async () => {
-      const q = supabaseAdmin.from("audit_logs").delete();
-      if (propertyIds.length > 0) {
-        return await q.or(
-          `user_id.eq.${userId},property_id.in.(${propertyIds.join(",")})`,
-        );
-      }
-      return await q.eq("user_id", userId);
-    });
+    if (propertyIds.length > 0) {
+      await step(
+        "logs de auditoria",
+        supabaseAdmin
+          .from("audit_logs")
+          .delete()
+          .or(`user_id.eq.${userId},property_id.in.(${propertyIds.join(",")})`),
+      );
+    } else {
+      await step("logs de auditoria", supabaseAdmin.from("audit_logs").delete().eq("user_id", userId));
+    }
 
     // Exclui o usuário do Auth
     const { error: delUserErr } = await supabaseAdmin.auth.admin.deleteUser(userId);
