@@ -650,16 +650,8 @@ function ExecutivoPage() {
             <Row label="Registros no mês" value={rankingBase.length} />
             <Row label="Melhor vaca" value={top5[0]?.nome ?? "—"} sub={top5[0] ? `${top5[0].total.toLocaleString("pt-BR")} L` : ""} />
             <Row label="Menor produção" value={bottom5[0]?.nome ?? "—"} sub={bottom5[0] ? `${bottom5[0].total.toLocaleString("pt-BR")} L` : ""} />
-            <Row
-              label="Novas vacas (30d)"
-              value={
-                vacas.filter(
-                  (v) =>
-                    v.criadoEm &&
-                    daysBetween(v.criadoEm, new Date().toISOString()) <= 30,
-                ).length
-              }
-            />
+            <Row label="Vacas em lactação" value={emLactacao} />
+
           </CardContent>
         </Card>
       </div>
