@@ -43,10 +43,10 @@ import { Progress } from "@/components/ui/progress";
 import { useStore } from "@/lib/store";
 import {
   currentMonthYear,
-  daysBetween,
   mesNome,
   statusVacina,
 } from "@/lib/lacto-utils";
+
 import { getCategoryColor } from "@/lib/chart-colors";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { cn } from "@/lib/utils";
