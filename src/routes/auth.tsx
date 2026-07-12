@@ -229,9 +229,30 @@ function SignupForm({ onDone }: { onDone: () => void }) {
         <Input value={form.phone} onChange={upd("phone")} />
       </Field>
       <label className="flex items-start gap-2 text-sm">
-        <Checkbox checked={accept} onCheckedChange={(v) => setAccept(Boolean(v))} />
-        <span className="text-muted-foreground">Li e aceito os termos de uso e a política de privacidade.</span>
+        <Checkbox checked={accept} onCheckedChange={(v) => setAccept(Boolean(v))} aria-label="Aceito os termos e a política" />
+        <span className="text-muted-foreground">
+          Li e aceito os{" "}
+          <Link
+            to="/termos-de-uso"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2 hover:opacity-80"
+          >
+            Termos de Uso
+          </Link>{" "}
+          e a{" "}
+          <Link
+            to="/politica-de-privacidade"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2 hover:opacity-80"
+          >
+            Política de Privacidade
+          </Link>{" "}
+          do Lacto Control.
+        </span>
       </label>
+
       <Button type="submit" className="w-full" disabled={!canSubmit}>
         {loading && <Loader2 className="mr-2 size-4 animate-spin" />}
         Criar cadastro
