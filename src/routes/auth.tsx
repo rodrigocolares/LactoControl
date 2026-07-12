@@ -18,6 +18,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 const searchSchema = z.object({
   redirect: z.string().optional(),
   mode: z.enum(["login", "signup", "forgot"]).optional(),
+  deleted: z.string().optional(),
 });
 
 export const Route = createFileRoute("/auth")({
