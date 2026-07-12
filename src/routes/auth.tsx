@@ -31,7 +31,7 @@ export const Route = createFileRoute("/auth")({
       {
         rel: "preload",
         as: "image",
-        href: (authBackgroundHref as unknown as string),
+        href: authBackground.image,
         fetchpriority: "high",
       },
     ],
