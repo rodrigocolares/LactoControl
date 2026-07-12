@@ -1,5 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useRef } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { useVirtualizer } from "@tanstack/react-virtual";
 import { supabase } from "@/integrations/supabase/client";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
 import { Button } from "@/components/ui/button";
@@ -70,47 +72,55 @@ const ACTION_LABEL: Record<string, string> = {
 };
 
 function AuditPage() {
-  const [logs, setLogs] = useState<Log[]>([]);
-  const [loading, setLoading] = useState(true);
   const [entity, setEntity] = usePersistentState<string>("audit:entity", "todas");
   const [action, setAction] = usePersistentState<string>("audit:action", "todas");
   const [from, setFrom] = usePersistentState<string>("audit:from", "");
   const [to, setTo] = usePersistentState<string>("audit:to", "");
   const [userFilter, setUserFilter] = usePersistentState<string>("audit:user", "");
 
-
-  const load = async () => {
-    setLoading(true);
-    let q = supabase
-      .from("audit_logs")
-      .select("*")
-      .order("created_at", { ascending: false })
-      .limit(500);
-    if (entity !== "todas") q = q.eq("entity_type", entity);
-    if (action !== "todas") q = q.eq("action", action);
-    if (from) q = q.gte("created_at", from);
-    if (to) q = q.lte("created_at", `${to}T23:59:59`);
-    if (userFilter) q = q.eq("user_id", userFilter);
-    const { data, error } = await q;
-    if (error) {
-      toast.error("Falha ao carregar auditoria.");
-      setLogs([]);
-    } else {
-      setLogs((data as Log[]) ?? []);
-    }
-    setLoading(false);
-  };
-
-  useEffect(() => {
-    void load();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const {
+    data: logs = [],
+    isLoading: loading,
+    isFetching,
+    refetch,
+  } = useQuery<Log[]>({
+    queryKey: ["audit_logs", { entity, action, from, to, userFilter }],
+    queryFn: async () => {
+      let q = supabase
+        .from("audit_logs")
+        .select("*")
+        .order("created_at", { ascending: false })
+        .limit(500);
+      if (entity !== "todas") q = q.eq("entity_type", entity);
+      if (action !== "todas") q = q.eq("action", action);
+      if (from) q = q.gte("created_at", from);
+      if (to) q = q.lte("created_at", `${to}T23:59:59`);
+      if (userFilter) q = q.eq("user_id", userFilter);
+      const { data, error } = await q;
+      if (error) {
+        toast.error("Falha ao carregar auditoria.");
+        throw error;
+      }
+      return (data as Log[]) ?? [];
+    },
+    staleTime: 30_000,
+    gcTime: 5 * 60_000,
+  });
 
   const totals = useMemo(() => {
     const t: Record<string, number> = {};
     for (const l of logs) t[l.action] = (t[l.action] ?? 0) + 1;
     return t;
   }, [logs]);
+
+  // ---- Virtualização da lista ----
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  const rowVirtualizer = useVirtualizer({
+    count: logs.length,
+    getScrollElement: () => scrollRef.current,
+    estimateSize: () => 44,
+    overscan: 12,
+  });
 
   const exportCSV = () => {
     const rows = [
@@ -242,8 +252,8 @@ function AuditPage() {
           </div>
         </div>
         <div className="mt-3 flex justify-end">
-          <Button onClick={load} disabled={loading}>
-            {loading ? (
+          <Button onClick={() => refetch()} disabled={isFetching}>
+            {isFetching ? (
               <Loader2 className="mr-2 size-4 animate-spin" />
             ) : (
               <RefreshCcw className="mr-2 size-4" />
@@ -267,38 +277,55 @@ function AuditPage() {
             />
           </div>
         ) : (
-
-          <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-muted/40 text-left text-xs uppercase tracking-wide text-muted-foreground">
-                <tr>
-                  <th className="px-4 py-2">Quando</th>
-                  <th className="px-4 py-2">Ação</th>
-                  <th className="px-4 py-2">Entidade</th>
-                  <th className="px-4 py-2">Registro</th>
-                </tr>
-              </thead>
-              <tbody>
-                {logs.map((l) => (
-                  <tr key={l.id} className="border-t border-border">
-                    <td className="px-4 py-2 whitespace-nowrap text-xs text-muted-foreground">
-                      {new Date(l.created_at).toLocaleString("pt-BR")}
-                    </td>
-                    <td className="px-4 py-2">
-                      <Badge variant="outline" className="text-xs">
-                        {ACTION_LABEL[l.action] ?? l.action}
-                      </Badge>
-                    </td>
-                    <td className="px-4 py-2 text-xs">
-                      {ENTITY_LABEL[l.entity_type] ?? l.entity_type}
-                    </td>
-                    <td className="px-4 py-2 font-mono text-[11px] text-muted-foreground">
-                      {l.entity_id ?? "—"}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div>
+            <div className="grid grid-cols-[minmax(160px,180px)_minmax(120px,160px)_minmax(90px,130px)_1fr] gap-0 border-b border-border bg-muted/40 px-4 py-2 text-left text-xs uppercase tracking-wide text-muted-foreground">
+              <div>Quando</div>
+              <div>Ação</div>
+              <div>Entidade</div>
+              <div>Registro</div>
+            </div>
+            <div
+              ref={scrollRef}
+              className="overflow-auto"
+              style={{ maxHeight: "60vh" }}
+            >
+              <div
+                style={{
+                  height: rowVirtualizer.getTotalSize(),
+                  position: "relative",
+                  width: "100%",
+                }}
+              >
+                {rowVirtualizer.getVirtualItems().map((virtualRow) => {
+                  const l = logs[virtualRow.index];
+                  return (
+                    <div
+                      key={l.id}
+                      className="absolute left-0 top-0 grid w-full grid-cols-[minmax(160px,180px)_minmax(120px,160px)_minmax(90px,130px)_1fr] items-center gap-0 border-b border-border px-4 text-sm"
+                      style={{
+                        height: virtualRow.size,
+                        transform: `translateY(${virtualRow.start}px)`,
+                      }}
+                    >
+                      <div className="whitespace-nowrap text-xs text-muted-foreground">
+                        {new Date(l.created_at).toLocaleString("pt-BR")}
+                      </div>
+                      <div>
+                        <Badge variant="outline" className="text-xs">
+                          {ACTION_LABEL[l.action] ?? l.action}
+                        </Badge>
+                      </div>
+                      <div className="text-xs">
+                        {ENTITY_LABEL[l.entity_type] ?? l.entity_type}
+                      </div>
+                      <div className="truncate font-mono text-[11px] text-muted-foreground">
+                        {l.entity_id ?? "—"}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
           </div>
         )}
         {!loading && logs.length > 0 && (

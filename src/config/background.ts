@@ -1,13 +1,12 @@
-import authBgUrl from "@/assets/backgrounds/auth-bg.jpg";
+import authBgAsset from "@/assets/backgrounds/auth-bg.jpg.asset.json";
 
 /**
  * Configuração centralizada do background das páginas públicas.
- * Trocar a imagem oficial = substituir o arquivo em src/assets/backgrounds/auth-bg.jpg
- * ou alterar o import abaixo.
+ * A imagem é servida via CDN (Lovable Assets) para não impactar o bundle.
+ * Para trocar: envie novo arquivo com `lovable-assets create` e substitua o pointer.
  */
 export const authBackground = {
-  image: authBgUrl,
-  // Overlay escuro sobre a imagem para garantir contraste com o formulário.
+  image: authBgAsset.url,
   overlayLight: "rgba(0, 0, 0, 0.35)",
   overlayDark: "rgba(0, 0, 0, 0.55)",
   position: "center center",

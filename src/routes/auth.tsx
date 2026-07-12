@@ -15,6 +15,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { AuthBackground } from "@/components/AuthBackground";
+import { authBackground } from "@/config/background";
 
 
 const searchSchema = z.object({
@@ -25,6 +26,16 @@ const searchSchema = z.object({
 
 export const Route = createFileRoute("/auth")({
   validateSearch: (s) => searchSchema.parse(s),
+  head: () => ({
+    links: [
+      {
+        rel: "preload",
+        as: "image",
+        href: authBackground.image,
+        fetchpriority: "high",
+      },
+    ],
+  }),
   component: AuthPage,
 });
 
