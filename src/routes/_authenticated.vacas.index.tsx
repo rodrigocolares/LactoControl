@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/hooks/use-auth";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
@@ -27,8 +27,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Search, Trash2 } from "lucide-react";
+import { Cog as MilkIcon, Plus, Search, Star, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { EmptyState } from "@/components/EmptyState";
+import { SkeletonCardGrid } from "@/components/Skeletons";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { usePersistentState } from "@/hooks/use-persistent-state";
+import { useFavorites } from "@/hooks/use-favorites";
+
 
 export const Route = createFileRoute("/_authenticated/vacas/")({
   head: () => ({
