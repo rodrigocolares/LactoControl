@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { AppLayout, PageHeader } from "@/components/AppLayout";
 import { actions, useStore } from "@/lib/store";
 import { mesNome, mesNomeLongo } from "@/lib/lacto-utils";
@@ -23,8 +23,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Plus, Trash2 } from "lucide-react";
+import { Droplet, Plus, Search, Trash2 } from "lucide-react";
 import { toast } from "sonner";
+import { EmptyState } from "@/components/EmptyState";
+import { SkeletonTable } from "@/components/Skeletons";
+import { useDebouncedValue } from "@/hooks/use-debounced-value";
+import { usePersistentState } from "@/hooks/use-persistent-state";
+
 
 export const Route = createFileRoute("/_authenticated/producao")({
   head: () => ({
