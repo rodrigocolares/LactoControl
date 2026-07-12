@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { z } from "zod";
 import { Droplet, Eye, EyeOff, Loader2, Mail, Lock, User as UserIcon, Building2, Phone } from "lucide-react";
 import { toast } from "sonner";
+import { PRIVACY_POLICY_VERSION, TERMS_VERSION } from "@/lib/legal";
+
 
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable";
@@ -87,8 +89,16 @@ function AuthPage() {
         </Card>
 
         <p className="mt-6 text-center text-xs text-muted-foreground">
-          Ao continuar, você concorda com os termos de uso e política de privacidade.
+          Ao continuar, você concorda com os{" "}
+          <Link to="/termos-de-uso" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            Termos de Uso
+          </Link>{" "}
+          e a{" "}
+          <Link to="/politica-de-privacidade" target="_blank" rel="noopener noreferrer" className="underline hover:text-foreground">
+            Política de Privacidade
+          </Link>.
         </p>
+
       </div>
     </div>
   );
@@ -181,9 +191,13 @@ function SignupForm({ onDone }: { onDone: () => void }) {
           full_name: form.full_name.trim(),
           farm_name: form.farm_name.trim() || null,
           phone: form.phone.trim() || null,
+          terms_accepted: true,
+          terms_version: TERMS_VERSION,
+          privacy_policy_version: PRIVACY_POLICY_VERSION,
         },
       },
     });
+
     setLoading(false);
     if (error) {
       toast.error(translateAuthError(error.message));
@@ -223,9 +237,30 @@ function SignupForm({ onDone }: { onDone: () => void }) {
         <Input value={form.phone} onChange={upd("phone")} />
       </Field>
       <label className="flex items-start gap-2 text-sm">
-        <Checkbox checked={accept} onCheckedChange={(v) => setAccept(Boolean(v))} />
-        <span className="text-muted-foreground">Li e aceito os termos de uso e a política de privacidade.</span>
+        <Checkbox checked={accept} onCheckedChange={(v) => setAccept(Boolean(v))} aria-label="Aceito os termos e a política" />
+        <span className="text-muted-foreground">
+          Li e aceito os{" "}
+          <Link
+            to="/termos-de-uso"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2 hover:opacity-80"
+          >
+            Termos de Uso
+          </Link>{" "}
+          e a{" "}
+          <Link
+            to="/politica-de-privacidade"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-primary underline underline-offset-2 hover:opacity-80"
+          >
+            Política de Privacidade
+          </Link>{" "}
+          do Lacto Control.
+        </span>
       </label>
+
       <Button type="submit" className="w-full" disabled={!canSubmit}>
         {loading && <Loader2 className="mr-2 size-4 animate-spin" />}
         Criar cadastro

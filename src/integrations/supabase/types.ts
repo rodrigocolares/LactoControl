@@ -246,7 +246,11 @@ export type Database = {
           full_name: string
           id: string
           phone: string | null
+          privacy_policy_version: string | null
           property_id: string | null
+          terms_accepted: boolean
+          terms_accepted_at: string | null
+          terms_version: string | null
           updated_at: string
         }
         Insert: {
@@ -255,7 +259,11 @@ export type Database = {
           full_name?: string
           id: string
           phone?: string | null
+          privacy_policy_version?: string | null
           property_id?: string | null
+          terms_accepted?: boolean
+          terms_accepted_at?: string | null
+          terms_version?: string | null
           updated_at?: string
         }
         Update: {
@@ -264,7 +272,11 @@ export type Database = {
           full_name?: string
           id?: string
           phone?: string | null
+          privacy_policy_version?: string | null
           property_id?: string | null
+          terms_accepted?: boolean
+          terms_accepted_at?: string | null
+          terms_version?: string | null
           updated_at?: string
         }
         Relationships: [
