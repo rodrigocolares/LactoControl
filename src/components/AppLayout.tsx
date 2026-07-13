@@ -12,6 +12,9 @@ import {
   Settings,
   ShieldCheck,
   Gauge,
+  HeartPulse,
+  Stethoscope,
+  DollarSign,
 
 } from "lucide-react";
 import { useState, type ReactNode } from "react";
@@ -36,6 +39,9 @@ const nav = [
   { to: "/executivo", label: "Executivo", icon: Gauge },
   { to: "/vacas", label: "Vacas", icon: Beef },
   { to: "/producao", label: "Produção", icon: Droplet },
+  { to: "/reprodutivo", label: "Reprodutivo", icon: HeartPulse },
+  { to: "/sanidade", label: "Sanidade", icon: Stethoscope },
+  { to: "/financeiro", label: "Financeiro", icon: DollarSign },
   { to: "/vacinacao", label: "Vacinação", icon: Syringe },
   { to: "/vacinas", label: "Vacinas", icon: Syringe },
   { to: "/relatorios", label: "Relatórios", icon: FileBarChart },

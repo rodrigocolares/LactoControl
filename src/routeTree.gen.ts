@@ -18,9 +18,12 @@ import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated.
 import { Route as AuthenticatedVacinasRouteImport } from './routes/_authenticated.vacinas'
 import { Route as AuthenticatedVacinacaoRouteImport } from './routes/_authenticated.vacinacao'
 import { Route as AuthenticatedVacasRouteImport } from './routes/_authenticated.vacas'
+import { Route as AuthenticatedSanidadeRouteImport } from './routes/_authenticated.sanidade'
+import { Route as AuthenticatedReprodutivoRouteImport } from './routes/_authenticated.reprodutivo'
 import { Route as AuthenticatedRelatoriosRouteImport } from './routes/_authenticated.relatorios'
 import { Route as AuthenticatedProducaoRouteImport } from './routes/_authenticated.producao'
 import { Route as AuthenticatedMinhaContaRouteImport } from './routes/_authenticated.minha-conta'
+import { Route as AuthenticatedFinanceiroRouteImport } from './routes/_authenticated.financeiro'
 import { Route as AuthenticatedExecutivoRouteImport } from './routes/_authenticated.executivo'
 import { Route as AuthenticatedAuditoriaRouteImport } from './routes/_authenticated.auditoria'
 import { Route as AuthenticatedVacasIndexRouteImport } from './routes/_authenticated.vacas.index'
@@ -70,6 +73,17 @@ const AuthenticatedVacasRoute = AuthenticatedVacasRouteImport.update({
   path: '/vacas',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedSanidadeRoute = AuthenticatedSanidadeRouteImport.update({
+  id: '/sanidade',
+  path: '/sanidade',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedReprodutivoRoute =
+  AuthenticatedReprodutivoRouteImport.update({
+    id: '/reprodutivo',
+    path: '/reprodutivo',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedRelatoriosRoute = AuthenticatedRelatoriosRouteImport.update({
   id: '/relatorios',
   path: '/relatorios',
@@ -83,6 +97,11 @@ const AuthenticatedProducaoRoute = AuthenticatedProducaoRouteImport.update({
 const AuthenticatedMinhaContaRoute = AuthenticatedMinhaContaRouteImport.update({
   id: '/minha-conta',
   path: '/minha-conta',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
+const AuthenticatedFinanceiroRoute = AuthenticatedFinanceiroRouteImport.update({
+  id: '/financeiro',
+  path: '/financeiro',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedExecutivoRoute = AuthenticatedExecutivoRouteImport.update({
@@ -114,9 +133,12 @@ export interface FileRoutesByFullPath {
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/auditoria': typeof AuthenticatedAuditoriaRoute
   '/executivo': typeof AuthenticatedExecutivoRoute
+  '/financeiro': typeof AuthenticatedFinanceiroRoute
   '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/producao': typeof AuthenticatedProducaoRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/reprodutivo': typeof AuthenticatedReprodutivoRoute
+  '/sanidade': typeof AuthenticatedSanidadeRoute
   '/vacas': typeof AuthenticatedVacasRouteWithChildren
   '/vacinacao': typeof AuthenticatedVacinacaoRoute
   '/vacinas': typeof AuthenticatedVacinasRoute
@@ -130,9 +152,12 @@ export interface FileRoutesByTo {
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/auditoria': typeof AuthenticatedAuditoriaRoute
   '/executivo': typeof AuthenticatedExecutivoRoute
+  '/financeiro': typeof AuthenticatedFinanceiroRoute
   '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/producao': typeof AuthenticatedProducaoRoute
   '/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/reprodutivo': typeof AuthenticatedReprodutivoRoute
+  '/sanidade': typeof AuthenticatedSanidadeRoute
   '/vacinacao': typeof AuthenticatedVacinacaoRoute
   '/vacinas': typeof AuthenticatedVacinasRoute
   '/': typeof AuthenticatedIndexRoute
@@ -148,9 +173,12 @@ export interface FileRoutesById {
   '/termos-de-uso': typeof TermosDeUsoRoute
   '/_authenticated/auditoria': typeof AuthenticatedAuditoriaRoute
   '/_authenticated/executivo': typeof AuthenticatedExecutivoRoute
+  '/_authenticated/financeiro': typeof AuthenticatedFinanceiroRoute
   '/_authenticated/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/_authenticated/producao': typeof AuthenticatedProducaoRoute
   '/_authenticated/relatorios': typeof AuthenticatedRelatoriosRoute
+  '/_authenticated/reprodutivo': typeof AuthenticatedReprodutivoRoute
+  '/_authenticated/sanidade': typeof AuthenticatedSanidadeRoute
   '/_authenticated/vacas': typeof AuthenticatedVacasRouteWithChildren
   '/_authenticated/vacinacao': typeof AuthenticatedVacinacaoRoute
   '/_authenticated/vacinas': typeof AuthenticatedVacinasRoute
@@ -168,9 +196,12 @@ export interface FileRouteTypes {
     | '/termos-de-uso'
     | '/auditoria'
     | '/executivo'
+    | '/financeiro'
     | '/minha-conta'
     | '/producao'
     | '/relatorios'
+    | '/reprodutivo'
+    | '/sanidade'
     | '/vacas'
     | '/vacinacao'
     | '/vacinas'
@@ -184,9 +215,12 @@ export interface FileRouteTypes {
     | '/termos-de-uso'
     | '/auditoria'
     | '/executivo'
+    | '/financeiro'
     | '/minha-conta'
     | '/producao'
     | '/relatorios'
+    | '/reprodutivo'
+    | '/sanidade'
     | '/vacinacao'
     | '/vacinas'
     | '/'
@@ -201,9 +235,12 @@ export interface FileRouteTypes {
     | '/termos-de-uso'
     | '/_authenticated/auditoria'
     | '/_authenticated/executivo'
+    | '/_authenticated/financeiro'
     | '/_authenticated/minha-conta'
     | '/_authenticated/producao'
     | '/_authenticated/relatorios'
+    | '/_authenticated/reprodutivo'
+    | '/_authenticated/sanidade'
     | '/_authenticated/vacas'
     | '/_authenticated/vacinacao'
     | '/_authenticated/vacinas'
@@ -285,6 +322,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedVacasRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
+    '/_authenticated/sanidade': {
+      id: '/_authenticated/sanidade'
+      path: '/sanidade'
+      fullPath: '/sanidade'
+      preLoaderRoute: typeof AuthenticatedSanidadeRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/reprodutivo': {
+      id: '/_authenticated/reprodutivo'
+      path: '/reprodutivo'
+      fullPath: '/reprodutivo'
+      preLoaderRoute: typeof AuthenticatedReprodutivoRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/relatorios': {
       id: '/_authenticated/relatorios'
       path: '/relatorios'
@@ -304,6 +355,13 @@ declare module '@tanstack/react-router' {
       path: '/minha-conta'
       fullPath: '/minha-conta'
       preLoaderRoute: typeof AuthenticatedMinhaContaRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/financeiro': {
+      id: '/_authenticated/financeiro'
+      path: '/financeiro'
+      fullPath: '/financeiro'
+      preLoaderRoute: typeof AuthenticatedFinanceiroRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/executivo': {
@@ -353,9 +411,12 @@ const AuthenticatedVacasRouteWithChildren =
 interface AuthenticatedRouteChildren {
   AuthenticatedAuditoriaRoute: typeof AuthenticatedAuditoriaRoute
   AuthenticatedExecutivoRoute: typeof AuthenticatedExecutivoRoute
+  AuthenticatedFinanceiroRoute: typeof AuthenticatedFinanceiroRoute
   AuthenticatedMinhaContaRoute: typeof AuthenticatedMinhaContaRoute
   AuthenticatedProducaoRoute: typeof AuthenticatedProducaoRoute
   AuthenticatedRelatoriosRoute: typeof AuthenticatedRelatoriosRoute
+  AuthenticatedReprodutivoRoute: typeof AuthenticatedReprodutivoRoute
+  AuthenticatedSanidadeRoute: typeof AuthenticatedSanidadeRoute
   AuthenticatedVacasRoute: typeof AuthenticatedVacasRouteWithChildren
   AuthenticatedVacinacaoRoute: typeof AuthenticatedVacinacaoRoute
   AuthenticatedVacinasRoute: typeof AuthenticatedVacinasRoute
@@ -365,9 +426,12 @@ interface AuthenticatedRouteChildren {
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedAuditoriaRoute: AuthenticatedAuditoriaRoute,
   AuthenticatedExecutivoRoute: AuthenticatedExecutivoRoute,
+  AuthenticatedFinanceiroRoute: AuthenticatedFinanceiroRoute,
   AuthenticatedMinhaContaRoute: AuthenticatedMinhaContaRoute,
   AuthenticatedProducaoRoute: AuthenticatedProducaoRoute,
   AuthenticatedRelatoriosRoute: AuthenticatedRelatoriosRoute,
+  AuthenticatedReprodutivoRoute: AuthenticatedReprodutivoRoute,
+  AuthenticatedSanidadeRoute: AuthenticatedSanidadeRoute,
   AuthenticatedVacasRoute: AuthenticatedVacasRouteWithChildren,
   AuthenticatedVacinacaoRoute: AuthenticatedVacinacaoRoute,
   AuthenticatedVacinasRoute: AuthenticatedVacinasRoute,
@@ -388,13 +452,3 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}

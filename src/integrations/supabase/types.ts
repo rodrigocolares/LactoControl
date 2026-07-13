@@ -58,6 +58,157 @@ export type Database = {
           },
         ]
       }
+      calvings: {
+        Row: {
+          calf_ear_tag: string | null
+          calf_name: string | null
+          calf_sex: Database["public"]["Enums"]["calf_sex"] | null
+          calf_weight_kg: number | null
+          calving_date: string
+          cow_id: string
+          created_at: string
+          created_by: string
+          delivery_type: Database["public"]["Enums"]["delivery_type"]
+          id: string
+          notes: string | null
+          property_id: string
+          stillborn: boolean
+          updated_at: string
+        }
+        Insert: {
+          calf_ear_tag?: string | null
+          calf_name?: string | null
+          calf_sex?: Database["public"]["Enums"]["calf_sex"] | null
+          calf_weight_kg?: number | null
+          calving_date: string
+          cow_id: string
+          created_at?: string
+          created_by: string
+          delivery_type?: Database["public"]["Enums"]["delivery_type"]
+          id?: string
+          notes?: string | null
+          property_id: string
+          stillborn?: boolean
+          updated_at?: string
+        }
+        Update: {
+          calf_ear_tag?: string | null
+          calf_name?: string | null
+          calf_sex?: Database["public"]["Enums"]["calf_sex"] | null
+          calf_weight_kg?: number | null
+          calving_date?: string
+          cow_id?: string
+          created_at?: string
+          created_by?: string
+          delivery_type?: Database["public"]["Enums"]["delivery_type"]
+          id?: string
+          notes?: string | null
+          property_id?: string
+          stillborn?: boolean
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calvings_cow_id_fkey"
+            columns: ["cow_id"]
+            isOneToOne: false
+            referencedRelation: "cows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calvings_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      clinical_events: {
+        Row: {
+          cost: number | null
+          cow_id: string
+          created_at: string
+          created_by: string
+          diagnosis: string | null
+          disease: string
+          event_date: string
+          id: string
+          meat_withdrawal_until: string | null
+          medication_id: string | null
+          milk_withdrawal_until: string | null
+          notes: string | null
+          property_id: string
+          resolved: boolean
+          responsible_person: string | null
+          symptoms: string | null
+          treatment: string | null
+          updated_at: string
+        }
+        Insert: {
+          cost?: number | null
+          cow_id: string
+          created_at?: string
+          created_by: string
+          diagnosis?: string | null
+          disease: string
+          event_date: string
+          id?: string
+          meat_withdrawal_until?: string | null
+          medication_id?: string | null
+          milk_withdrawal_until?: string | null
+          notes?: string | null
+          property_id: string
+          resolved?: boolean
+          responsible_person?: string | null
+          symptoms?: string | null
+          treatment?: string | null
+          updated_at?: string
+        }
+        Update: {
+          cost?: number | null
+          cow_id?: string
+          created_at?: string
+          created_by?: string
+          diagnosis?: string | null
+          disease?: string
+          event_date?: string
+          id?: string
+          meat_withdrawal_until?: string | null
+          medication_id?: string | null
+          milk_withdrawal_until?: string | null
+          notes?: string | null
+          property_id?: string
+          resolved?: boolean
+          responsible_person?: string | null
+          symptoms?: string | null
+          treatment?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "clinical_events_cow_id_fkey"
+            columns: ["cow_id"]
+            isOneToOne: false
+            referencedRelation: "cows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clinical_events_medication_id_fkey"
+            columns: ["medication_id"]
+            isOneToOne: false
+            referencedRelation: "medications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "clinical_events_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       cows: {
         Row: {
           birth_date: string | null
@@ -173,6 +324,380 @@ export type Database = {
           },
         ]
       }
+      expenses: {
+        Row: {
+          amount: number
+          category: Database["public"]["Enums"]["expense_category"]
+          cow_id: string | null
+          created_at: string
+          created_by: string
+          description: string
+          expense_date: string
+          id: string
+          invoice_number: string | null
+          notes: string | null
+          property_id: string
+          quantity: number | null
+          reference_month: number | null
+          reference_year: number | null
+          supplier: string | null
+          updated_at: string
+        }
+        Insert: {
+          amount: number
+          category?: Database["public"]["Enums"]["expense_category"]
+          cow_id?: string | null
+          created_at?: string
+          created_by: string
+          description: string
+          expense_date: string
+          id?: string
+          invoice_number?: string | null
+          notes?: string | null
+          property_id: string
+          quantity?: number | null
+          reference_month?: number | null
+          reference_year?: number | null
+          supplier?: string | null
+          updated_at?: string
+        }
+        Update: {
+          amount?: number
+          category?: Database["public"]["Enums"]["expense_category"]
+          cow_id?: string | null
+          created_at?: string
+          created_by?: string
+          description?: string
+          expense_date?: string
+          id?: string
+          invoice_number?: string | null
+          notes?: string | null
+          property_id?: string
+          quantity?: number | null
+          reference_month?: number | null
+          reference_year?: number | null
+          supplier?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "expenses_cow_id_fkey"
+            columns: ["cow_id"]
+            isOneToOne: false
+            referencedRelation: "cows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "expenses_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      heats: {
+        Row: {
+          cow_id: string
+          created_at: string
+          created_by: string
+          heat_date: string
+          id: string
+          intensity: string | null
+          notes: string | null
+          observed_by: string | null
+          property_id: string
+          updated_at: string
+        }
+        Insert: {
+          cow_id: string
+          created_at?: string
+          created_by: string
+          heat_date: string
+          id?: string
+          intensity?: string | null
+          notes?: string | null
+          observed_by?: string | null
+          property_id: string
+          updated_at?: string
+        }
+        Update: {
+          cow_id?: string
+          created_at?: string
+          created_by?: string
+          heat_date?: string
+          id?: string
+          intensity?: string | null
+          notes?: string | null
+          observed_by?: string | null
+          property_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "heats_cow_id_fkey"
+            columns: ["cow_id"]
+            isOneToOne: false
+            referencedRelation: "cows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "heats_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      inseminations: {
+        Row: {
+          batch_number: string | null
+          bull_or_semen: string | null
+          cow_id: string
+          created_at: string
+          created_by: string
+          iatf_protocol: string | null
+          id: string
+          insemination_date: string
+          method: Database["public"]["Enums"]["insemination_method"]
+          notes: string | null
+          property_id: string
+          technician: string | null
+          updated_at: string
+        }
+        Insert: {
+          batch_number?: string | null
+          bull_or_semen?: string | null
+          cow_id: string
+          created_at?: string
+          created_by: string
+          iatf_protocol?: string | null
+          id?: string
+          insemination_date: string
+          method?: Database["public"]["Enums"]["insemination_method"]
+          notes?: string | null
+          property_id: string
+          technician?: string | null
+          updated_at?: string
+        }
+        Update: {
+          batch_number?: string | null
+          bull_or_semen?: string | null
+          cow_id?: string
+          created_at?: string
+          created_by?: string
+          iatf_protocol?: string | null
+          id?: string
+          insemination_date?: string
+          method?: Database["public"]["Enums"]["insemination_method"]
+          notes?: string | null
+          property_id?: string
+          technician?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inseminations_cow_id_fkey"
+            columns: ["cow_id"]
+            isOneToOne: false
+            referencedRelation: "cows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inseminations_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      lab_exams: {
+        Row: {
+          attachment_url: string | null
+          ccs_value: number | null
+          cost: number | null
+          cow_id: string | null
+          created_at: string
+          created_by: string
+          exam_date: string
+          exam_type: string
+          id: string
+          laboratory: string | null
+          notes: string | null
+          property_id: string
+          result: string | null
+          updated_at: string
+        }
+        Insert: {
+          attachment_url?: string | null
+          ccs_value?: number | null
+          cost?: number | null
+          cow_id?: string | null
+          created_at?: string
+          created_by: string
+          exam_date: string
+          exam_type: string
+          id?: string
+          laboratory?: string | null
+          notes?: string | null
+          property_id: string
+          result?: string | null
+          updated_at?: string
+        }
+        Update: {
+          attachment_url?: string | null
+          ccs_value?: number | null
+          cost?: number | null
+          cow_id?: string | null
+          created_at?: string
+          created_by?: string
+          exam_date?: string
+          exam_type?: string
+          id?: string
+          laboratory?: string | null
+          notes?: string | null
+          property_id?: string
+          result?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lab_exams_cow_id_fkey"
+            columns: ["cow_id"]
+            isOneToOne: false
+            referencedRelation: "cows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lab_exams_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medication_stock_entries: {
+        Row: {
+          batch_number: string | null
+          created_at: string
+          created_by: string
+          entry_date: string
+          expiration_date: string | null
+          id: string
+          medication_id: string
+          notes: string | null
+          property_id: string
+          quantity: number
+          supplier: string | null
+          unit_cost: number | null
+          updated_at: string
+        }
+        Insert: {
+          batch_number?: string | null
+          created_at?: string
+          created_by: string
+          entry_date?: string
+          expiration_date?: string | null
+          id?: string
+          medication_id: string
+          notes?: string | null
+          property_id: string
+          quantity: number
+          supplier?: string | null
+          unit_cost?: number | null
+          updated_at?: string
+        }
+        Update: {
+          batch_number?: string | null
+          created_at?: string
+          created_by?: string
+          entry_date?: string
+          expiration_date?: string | null
+          id?: string
+          medication_id?: string
+          notes?: string | null
+          property_id?: string
+          quantity?: number
+          supplier?: string | null
+          unit_cost?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medication_stock_entries_medication_id_fkey"
+            columns: ["medication_id"]
+            isOneToOne: false
+            referencedRelation: "medications"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "medication_stock_entries_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      medications: {
+        Row: {
+          active: boolean
+          active_ingredient: string | null
+          created_at: string
+          created_by: string
+          id: string
+          manufacturer: string | null
+          name: string
+          notes: string | null
+          property_id: string
+          unit: Database["public"]["Enums"]["medication_unit"]
+          updated_at: string
+          withdrawal_meat_days: number
+          withdrawal_milk_days: number
+        }
+        Insert: {
+          active?: boolean
+          active_ingredient?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          manufacturer?: string | null
+          name: string
+          notes?: string | null
+          property_id: string
+          unit?: Database["public"]["Enums"]["medication_unit"]
+          updated_at?: string
+          withdrawal_meat_days?: number
+          withdrawal_milk_days?: number
+        }
+        Update: {
+          active?: boolean
+          active_ingredient?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          manufacturer?: string | null
+          name?: string
+          notes?: string | null
+          property_id?: string
+          unit?: Database["public"]["Enums"]["medication_unit"]
+          updated_at?: string
+          withdrawal_meat_days?: number
+          withdrawal_milk_days?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "medications_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       milk_productions: {
         Row: {
           cow_id: string
@@ -232,6 +757,135 @@ export type Database = {
           },
           {
             foreignKeyName: "milk_productions_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      milk_sales: {
+        Row: {
+          buyer: string | null
+          created_at: string
+          created_by: string
+          id: string
+          invoice_number: string | null
+          liters: number
+          notes: string | null
+          price_per_liter: number
+          property_id: string
+          reference_month: number
+          reference_year: number
+          sale_date: string
+          total_amount: number
+          updated_at: string
+        }
+        Insert: {
+          buyer?: string | null
+          created_at?: string
+          created_by: string
+          id?: string
+          invoice_number?: string | null
+          liters: number
+          notes?: string | null
+          price_per_liter: number
+          property_id: string
+          reference_month: number
+          reference_year: number
+          sale_date: string
+          total_amount: number
+          updated_at?: string
+        }
+        Update: {
+          buyer?: string | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          invoice_number?: string | null
+          liters?: number
+          notes?: string | null
+          price_per_liter?: number
+          property_id?: string
+          reference_month?: number
+          reference_year?: number
+          sale_date?: string
+          total_amount?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "milk_sales_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      pregnancy_checks: {
+        Row: {
+          check_date: string
+          cow_id: string
+          created_at: string
+          created_by: string
+          expected_calving_date: string | null
+          gestation_days: number | null
+          id: string
+          insemination_id: string | null
+          method: string | null
+          notes: string | null
+          property_id: string
+          result: Database["public"]["Enums"]["pregnancy_result"]
+          updated_at: string
+        }
+        Insert: {
+          check_date: string
+          cow_id: string
+          created_at?: string
+          created_by: string
+          expected_calving_date?: string | null
+          gestation_days?: number | null
+          id?: string
+          insemination_id?: string | null
+          method?: string | null
+          notes?: string | null
+          property_id: string
+          result: Database["public"]["Enums"]["pregnancy_result"]
+          updated_at?: string
+        }
+        Update: {
+          check_date?: string
+          cow_id?: string
+          created_at?: string
+          created_by?: string
+          expected_calving_date?: string | null
+          gestation_days?: number | null
+          id?: string
+          insemination_id?: string | null
+          method?: string | null
+          notes?: string | null
+          property_id?: string
+          result?: Database["public"]["Enums"]["pregnancy_result"]
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pregnancy_checks_cow_id_fkey"
+            columns: ["cow_id"]
+            isOneToOne: false
+            referencedRelation: "cows"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pregnancy_checks_insemination_id_fkey"
+            columns: ["insemination_id"]
+            isOneToOne: false
+            referencedRelation: "inseminations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pregnancy_checks_property_id_fkey"
             columns: ["property_id"]
             isOneToOne: false
             referencedRelation: "properties"
@@ -469,6 +1123,59 @@ export type Database = {
           },
         ]
       }
+      vet_visits: {
+        Row: {
+          cost: number | null
+          cows_attended: number | null
+          created_at: string
+          created_by: string
+          id: string
+          next_visit_date: string | null
+          notes: string | null
+          property_id: string
+          reason: string | null
+          updated_at: string
+          vet_name: string
+          visit_date: string
+        }
+        Insert: {
+          cost?: number | null
+          cows_attended?: number | null
+          created_at?: string
+          created_by: string
+          id?: string
+          next_visit_date?: string | null
+          notes?: string | null
+          property_id: string
+          reason?: string | null
+          updated_at?: string
+          vet_name: string
+          visit_date: string
+        }
+        Update: {
+          cost?: number | null
+          cows_attended?: number | null
+          created_at?: string
+          created_by?: string
+          id?: string
+          next_visit_date?: string | null
+          notes?: string | null
+          property_id?: string
+          reason?: string | null
+          updated_at?: string
+          vet_name?: string
+          visit_date?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vet_visits_property_id_fkey"
+            columns: ["property_id"]
+            isOneToOne: false
+            referencedRelation: "properties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -478,7 +1185,21 @@ export type Database = {
       user_owns_property: { Args: { _property_id: string }; Returns: boolean }
     }
     Enums: {
+      calf_sex: "macho" | "femea"
       cow_status: "lactacao" | "seca" | "prenha" | "descartada"
+      delivery_type: "normal" | "distocico" | "cesariana"
+      expense_category:
+        | "racao"
+        | "medicamento"
+        | "mao_de_obra"
+        | "energia"
+        | "manutencao"
+        | "sanidade"
+        | "reproducao"
+        | "outros"
+      insemination_method: "ia" | "monta_natural" | "iatf"
+      medication_unit: "ml" | "g" | "mg" | "kg" | "l" | "dose" | "comprimido"
+      pregnancy_result: "positivo" | "negativo" | "duvidoso"
       vaccine_frequency:
         | "anual"
         | "semestral"
@@ -613,7 +1334,22 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
+      calf_sex: ["macho", "femea"],
       cow_status: ["lactacao", "seca", "prenha", "descartada"],
+      delivery_type: ["normal", "distocico", "cesariana"],
+      expense_category: [
+        "racao",
+        "medicamento",
+        "mao_de_obra",
+        "energia",
+        "manutencao",
+        "sanidade",
+        "reproducao",
+        "outros",
+      ],
+      insemination_method: ["ia", "monta_natural", "iatf"],
+      medication_unit: ["ml", "g", "mg", "kg", "l", "dose", "comprimido"],
+      pregnancy_result: ["positivo", "negativo", "duvidoso"],
       vaccine_frequency: [
         "anual",
         "semestral",
